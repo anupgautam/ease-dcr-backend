@@ -1,0 +1,2 @@
+class GroupNameError(Exception):
+    pass

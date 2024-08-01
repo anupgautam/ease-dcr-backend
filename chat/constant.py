@@ -1,0 +1,3 @@
+BASE_URL = "192.168.1.2:8000"
+WEB_SOCKET_BASE_URL="ws://192.168.1.2:8000"
+FRONTEND_URL = "http://localhost:3000/"

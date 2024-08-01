@@ -1,0 +1,7 @@
+*.pyc
+# Ignore migration files
+**/migrations/*.py
+**/migrations/*.pyc
+
+virtualenv
+dcr/
