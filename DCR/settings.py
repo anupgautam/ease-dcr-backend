@@ -122,28 +122,28 @@ ASGI_APPLICATION = "DCR.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'DCRDatabase',
-#         'USER': 'postgres',
-#         'HOST': 'localhost',
-#         'PASSWORD': '[GandDdevelopers]',
-#         'PORT': '5432',
-
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dcr",
-        "USER": "postgres",
-        "HOST": "localhost",
-        "PASSWORD": "password",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dcr',
+        'USER': 'postgres',
+        'HOST': 'localhost',
+        'PASSWORD': 'password',
+        'PORT': '5432',
+
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "NewDCR1",
+#         "USER": "postgres",
+#         "HOST": "localhost",
+#         "PASSWORD": "czvxynmch",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
@@ -271,11 +271,8 @@ CACHES = {
 
 # django channels layer configuration
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],  # Adjust host and port as needed
-        },
+   "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 
