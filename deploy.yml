@@ -1,9 +1,9 @@
 image: python:3.9
 
 variables:
-  POSTGRES_DB: "dcrdatabase"        
-  POSTGRES_USER: "dcruser"         
-  POSTGRES_PASSWORD: "czvxynmch"    
+  POSTGRES_DB: "dcr"        
+  POSTGRES_USER: "postgres"         
+  POSTGRES_PASSWORD: "password"    
   POSTGRES_HOST_AUTH_METHOD: trust             
 
 services:
@@ -30,7 +30,7 @@ deploy:
   script: 
     - apt update
     - apt install sshpass
-    - sshpass -p '@5j84~T)bE' ssh -o StrictHostKeyChecking=no root@46.250.248.183 'cd /root/home/ease-dcr/ease-dcr-backend/ && git reset --hard && git pull && ./deploy.sh'
+    - sshpass -p '@5j84~T)bE' ssh -o StrictHostKeyChecking=no root@46.250.248.183 'cd /var/www/ease-dcr-backend/ && git reset --hard && git pull'
 
   only:
     - master

@@ -3,5 +3,4 @@
 **/migrations/*.py
 **/migrations/*.pyc
 
-virtualenv
-dcr/
+env
