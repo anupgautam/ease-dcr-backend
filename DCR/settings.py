@@ -137,10 +137,10 @@ ASGI_APPLICATION = "DCR.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "NewDCR1",
+        "NAME": "dcr",
         "USER": "postgres",
         "HOST": "localhost",
-        "PASSWORD": "czvxynmch",
+        "PASSWORD": "password",
         "PORT": "5432",
     }
 }
