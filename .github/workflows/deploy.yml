@@ -15,7 +15,7 @@ jobs:
         with:
           host: 159.65.145.104
           username: root
-          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDj2zVSYXTigox/u1aXryFYMkOapGf8RrrXfBvzq4FSCEtC1ObX9sw5fzhniY5No3rdgtpeuBLcPS21xgIDmyeOlHqfMOqGSdUAkhWH/DmCuafsQMCTIIiZ9TPA3bbrLMjBO83Nt2wVLjuK4su/ucB5HnxnK1ECvD4RP1CJLdTHawwUfPpvTFReXTl/UvoSNywpxHFxCmrWNis5Ao2vg48ZO9BJ9AvBtmUz6c1qdkIdXa7x8+GEOBEf0IadfCGH700ARLEwN/cjj4oj049zqb0pzta1FGZNvDzSg1W2S+Kpi8IvzI9BWKUgrcpHeGrkxP6ln2Je+ScwZAF6w2awz3PmLcE3zsM/9qPhNtpgv+XClJ/MnLxBiSBuqzvhatzsdgJP7veU0IwuXvgEff9FdelqCSwFdjfoZy6n/aAIoXn6A73X/FL6bxI6kRfPrWM6o2AzkSuxBQJBse93yZz5ZGaufSknLJGV+g2HqfpctYZ0GLriaYQd+dzI8rj7UMFXlvk= anupgautam@Anups-MacBook-Pro.local
+          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCbu+WP+30S4L0It4ojwBmY4d4xZGKtHs8SW0CQ99zSVHoUGsiHRne+jpPtIHG1ikiRo3/6mC2zkapQfCVA6OjhmIbJuvktM/9vTwU+bTdTVyV5lhR5RE5oZGTahA0mOzy6kSNqzDIS8GStKHHZu472R5RljmNiggjyloig/ouVkRlZePkXrm8V6NZxilbc3BDaQaSWaL9uYOdVBYIp8n9cvreWSsh1MBHIPRPQoekWeQYXQuwI1sh/N0oZ2lZuhxnpw0UU5cuYbxGNdvGbiXFEpFxBW+dgsTfkFrolE1a0WXz5xM0X+Q4K1GQkzYw2vuH00Bbg0zLL/JyDC/RVYQyz0/g0lxH6XI+ExwTR5JwhYXKgWG2/iS23k6Hcgm3npTkkBDCu42O3o2WLhCm3MENYjirAgHz7r63xivNx1pRlnTLG+IbNqfNSWEXaysRmuinMmaI0paBxl0vwBT1Kfu+2RLQq05wI4IMD3OQOX2PyS0JORwStwok4f/e84EIZ0fk= root@ubuntu-s-2vcpu-4gb-blr1-01
           port: 22
           script: |
             cd /var/www/ease-dcr-backend
