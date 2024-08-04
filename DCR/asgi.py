@@ -16,9 +16,7 @@ import chat.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DCR.settings')
 
-# Debugging information
-print(f"DJANGO_SETTINGS_MODULE: {os.environ.get('DJANGO_SETTINGS_MODULE')}")
-
+# Ensure Django settings are loaded
 django.setup()
 
 application = ProtocolTypeRouter(
