@@ -115,7 +115,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'DCR.wsgi.application'
+# WSGI_APPLICATION = 'DCR.wsgi.application'
 ASGI_APPLICATION = "DCR.asgi.application"
 
 
