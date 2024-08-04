@@ -13,9 +13,9 @@ jobs:
       - name: Connecting SSH And Executing Deployment Scripts
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: 159.65.145.104
           username: root
-          key: ${{ secrets.SSH_KEY }}
+          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDj2zVSYXTigox/u1aXryFYMkOapGf8RrrXfBvzq4FSCEtC1ObX9sw5fzhniY5No3rdgtpeuBLcPS21xgIDmyeOlHqfMOqGSdUAkhWH/DmCuafsQMCTIIiZ9TPA3bbrLMjBO83Nt2wVLjuK4su/ucB5HnxnK1ECvD4RP1CJLdTHawwUfPpvTFReXTl/UvoSNywpxHFxCmrWNis5Ao2vg48ZO9BJ9AvBtmUz6c1qdkIdXa7x8+GEOBEf0IadfCGH700ARLEwN/cjj4oj049zqb0pzta1FGZNvDzSg1W2S+Kpi8IvzI9BWKUgrcpHeGrkxP6ln2Je+ScwZAF6w2awz3PmLcE3zsM/9qPhNtpgv+XClJ/MnLxBiSBuqzvhatzsdgJP7veU0IwuXvgEff9FdelqCSwFdjfoZy6n/aAIoXn6A73X/FL6bxI6kRfPrWM6o2AzkSuxBQJBse93yZz5ZGaufSknLJGV+g2HqfpctYZ0GLriaYQd+dzI8rj7UMFXlvk= anupgautam@Anups-MacBook-Pro.local
           port: 22
           script: |
             cd /var/www/ease-dcr-backend
