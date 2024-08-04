@@ -26,5 +26,4 @@ jobs:
             pip install -r requirements.txt
             pkill gunicorn || true
             pkill daphne || true
-            gunicorn -b 0.0.0.0:8000 DCR.wsgi:application &
-            daphne -b 0.0.0.0 -p 8001 DCR.asgi:application &
+            python3 manage.py runserver
