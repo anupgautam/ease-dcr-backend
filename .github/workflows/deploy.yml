@@ -22,6 +22,8 @@ jobs:
             git fetch --all
             git checkout master
             git reset --hard origin/master
-            source ./venv/bin/activate
+            source ./env/bin/activate
             pip install -r requirements.txt
-            nohup python3 manage.py runserver 0.0.0.0:8000 &
+            python3 manage.py makemigrations
+            python3 manage.py migrate
+            nohup python manage.py runserver 0.0.0.0:8000 &
