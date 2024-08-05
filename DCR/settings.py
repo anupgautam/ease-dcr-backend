@@ -29,6 +29,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["api.easesfa.com"]
 
+CSRF_TRUSTED_ORIGINS=['https://api.easesfa.com']
+
 
 # Application definition
 INSTALLED_APPS = [
