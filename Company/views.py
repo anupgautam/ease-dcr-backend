@@ -236,6 +236,26 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
+    @action(detail=True, methods=["patch"])
+    @permission_classes(
+        [
+            IsAuthenticated,
+        ]
+    )
+    def bulk_update_company_holiday(self, request):
+        holiday_type = request.data.get("holiday_type")
+        company_area = request.data.get("company_area")
+        CompanyHolidayArea.objects.filter(holiday_type__id=holiday_type).delete()
+        company_holiday_area = [
+            CompanyHolidayArea(company_area=comp_area, holiday_type=holiday_type)
+            for comp_area in company_area
+        ]
+        CompanyHolidayArea.objects.bulk_create(company_holiday_area)
+        return Response(
+            data={"Success": "Successfully created company holiday area"},
+            status=status.HTTP_200_OK,
+        )
+
 
 class CompanyHolidayDateViewset(viewsets.ModelViewSet):
     model = CompanyHolidayDate

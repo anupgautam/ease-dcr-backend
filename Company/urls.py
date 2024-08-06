@@ -15,29 +15,31 @@ from Company.views import (
     CompanyRolesSalaryViewset,
     CompanyHolidayViewset,
     CompanyHolidayAreaViewset,
+    CompanyHolidayDateViewset
 )
 
 
 router = DefaultRouter()
-router.register(r"company", CompanyViewset)
-router.register(r"division", DivisionViewset)
-router.register(r"roles", RolesViewset)
+router.register(r"company", CompanyViewset, basename="company")
+router.register(r"division", DivisionViewset, basename="division")
+router.register(r"roles", RolesViewset, basename="roles")
 router.register(r"notices", NoticesViewset, basename="notice")
 # router.register(r'working-area', WorkingAreaViewset)
 # router.register(r'working-area', WorkingAreaViewset)
-router.register(r"working-hour", WorkingHourViewset)
-router.register(r"company-wise-division", CompanyWiseDivsionViewset)
+router.register(r"working-hour", WorkingHourViewset, basename="working_hour")
+router.register(r"company-wise-division", CompanyWiseDivsionViewset, basename="company_wise_division")
 router.register(r"company-area", CompanyAreaViewset, basename="company_area")
 router.register(
     r"company-area-without-to-representation",
     CompanyAreaViewsetWithoutToRepresentation,
     basename="company_area_without_to_representation",
 )
-router.register(r"company-working-hour", CompanyWorkingHourViewset)
-router.register(r"company-roles", CompanyRolesViewset)
-router.register(r"company-notice", CompanyNoticesViewset)
-router.register(r"add-notices", NoticeViewset)
-router.register(r"company-roles-salary", CompanyRolesSalaryViewset)
-router.register(r"company-holiday", CompanyHolidayViewset)
-router.register(r"company-holiday-area", CompanyHolidayAreaViewset)
+router.register(r"company-working-hour", CompanyWorkingHourViewset, basename="company_working_hour")
+router.register(r"company-roles", CompanyRolesViewset, basename="company_roles")
+router.register(r"company-notice", CompanyNoticesViewset, basename="company_notice")
+router.register(r"add-notices", NoticeViewset, basename="add_notices")
+router.register(r"company-roles-salary", CompanyRolesSalaryViewset, basename="company_roles_salary")
+router.register(r"company-holiday", CompanyHolidayViewset, basename="company_holiday")
+router.register(r"company-holiday-area", CompanyHolidayAreaViewset, basename="company_holiday_area")
+router.register(r"company-holiday-date", CompanyHolidayDateViewset, basename="company_holiday_date")
 urlpatterns = router.urls
