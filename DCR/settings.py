@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["159.65.145.104"]
 
-CSRF_TRUSTED_ORIGINS=['https://api.easesfa.com']
+CSRF_TRUSTED_ORIGINS=['https://159.65.145.104']
 
 
 # Application definition
