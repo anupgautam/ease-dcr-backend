@@ -17,16 +17,16 @@ import chat.routing
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DCR.settings')
 
 # Ensure Django settings are loaded
-django.setup()
 
-application = get_asgi_application()
-# ProtocolTypeRouter(
-#     {
-#         "http": get_asgi_application(),
-#         "websocket": AuthMiddlewareStack(
-#             URLRouter(
-#                 chat.routing.websocket_urlpatterns
-#             )
-#         ),
-#     }
-# )
+application = ProtocolTypeRouter(
+    {
+        "http": get_asgi_application(),
+        "websocket": AuthMiddlewareStack(
+            URLRouter(
+                chat.routing.websocket_urlpatterns
+            )
+        ),
+    }
+)
+
+django.setup()
