@@ -201,6 +201,13 @@ class CompanyHolidayAreaSerializers(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = CompanyHolidayArea
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['company_area'] = CompanyAreaSerializers(
+                                    instance.company_area).data
+        response['holiday_type'] = CompanyHolidaySerializers(
+                                    instance.holiday_type).data
+        return response
 
 
 class CompanyHolidayDateSerializers(serializers.ModelSerializer):
