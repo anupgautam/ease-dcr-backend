@@ -125,19 +125,6 @@ class ChemistOrderedProductInformation(TimeStamp, models.Model):
     )
 
 
-class ChemistOrderedProductInformationMap(TimeStamp, models.Model):
-    product_id = models.ForeignKey(CompanyProduct,
-                                   on_delete=models.CASCADE,
-                                   null=True,
-                                   blank=True)
-    information_id = models.ForeignKey(
-        ChemistOrderedProductInformation,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-
-
 # This model stores the dcr of chemist
 class DcrForChemist(TimeStamp, models.Model):
     date = models.DateField(blank=True, null=True)
@@ -168,6 +155,19 @@ class DcrForChemistProduct(TimeStamp, models.Model):
         CompanyProduct, on_delete=models.CASCADE,
         blank=True,
         null=True
+    )
+
+
+class ChemistOrderedProductInformationMap(TimeStamp, models.Model):
+    product_id = models.ForeignKey(DcrForChemistProduct,
+                                   on_delete=models.CASCADE,
+                                   null=True,
+                                   blank=True)
+    information_id = models.ForeignKey(
+        ChemistOrderedProductInformation,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
 
 

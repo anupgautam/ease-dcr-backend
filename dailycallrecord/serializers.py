@@ -460,7 +460,7 @@ class DCRChemistOrderedProductInformationSerializer(serializers.Serializer):
     
     
     def create(self, validated_data):
-        original_model = CompanyProduct
+        original_model = DcrForChemistProduct
         create_array = CreateArrayInsideDictionaryWithQuerySet
         CreateLogicID(
             DCR_ORDERED_PRODUCT_INFORMATION,
@@ -475,7 +475,7 @@ class DCRChemistOrderedProductInformationSerializer(serializers.Serializer):
         return original_data
 
     def update(self, instance, validated_data):
-        original_model = CompanyProduct
+        original_model = DcrForChemistProduct
         create_array = CreateArrayInsideDictionaryWithQuerySet
         # if validated_data['ordered_product'] is None:
         #     validated_data['ordered_product'] = None
@@ -500,7 +500,7 @@ class DCRChemistOrderedProductInformationSerializer(serializers.Serializer):
         return original_data
 
     def delete(self, request, *args, **kwargs):
-        original_model = CompanyProduct
+        original_model = DcrForChemistProduct
         create_array = CreateArrayInsideDictionaryWithQuerySet
         DeleteLogicID(
             DCR_ORDERED_PRODUCT_INFORMATION,

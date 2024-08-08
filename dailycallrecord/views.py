@@ -292,6 +292,10 @@ class DcrForChemsitViewset(viewsets.ModelViewSet):
 class DcrForChemistProductViewset(viewsets.ModelViewSet):
     serializer_class = DcrForChemistProductSerializer
     queryset = DcrForChemistProduct.objects.all()
+    filterset_fields = [
+                        'ordered_product',
+                        'dcr_id',
+                       ]
 
 
 class DcrForChemistPromotedProductMapViewset(viewsets.ModelViewSet):
@@ -352,7 +356,7 @@ class DCRChemistOrderedProductInformationViewset(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         DATA = get_template_data(
-            CompanyProduct,
+            DcrForChemistProduct,
             ChemistOrderedProductInformationSerializer,
             DCR_ORDERED_PRODUCT_INFORMATION
         )
@@ -400,7 +404,7 @@ class DCRChemistOrderedProductInformationViewset(viewsets.ViewSet):
         # else:
         #     sending_data['ordered_product'] = None
         serializer = self.serializer_class(
-            instance = CompanyProduct.objects.get(id=pk),
+            instance = DcrForChemistProduct.objects.get(id=pk),
             data=sending_data,
             partial=True,
             context=data.get('context'))
@@ -418,7 +422,7 @@ class DCRChemistOrderedProductInformationViewset(viewsets.ViewSet):
         id = request.data.get('id')
         data = formdata_application_json(request.data)
         serializer = self.serializer_class(
-            instance = CompanyProduct.objects.get(id=id),
+            instance = DcrForChemistProduct.objects.get(id=id),
             data=request.data,
             context=data.get('context'))
         if serializer.is_valid():
