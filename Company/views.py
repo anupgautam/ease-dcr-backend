@@ -217,7 +217,7 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @action(detail=True, methods=["patch"])
+    @action(detail=True, methods=["post"])
     @permission_classes(
         [
             IsAuthenticated,
