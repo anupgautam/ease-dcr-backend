@@ -222,7 +222,9 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
         company_area = request.data.get("company_area")
         holiday_type = request.data.get("holiday_type")
         company_holiday_area = [
-            CompanyHolidayArea(company_area=comp_area, holiday_type=holiday_type)
+            CompanyHolidayArea(
+                company_area=CompanyArea.objects.get(id=comp_area),
+                holiday_type=CompanyHoliday.objects.get(id=holiday_type))
             for comp_area in company_area
         ]
         CompanyHolidayArea.objects.bulk_create(company_holiday_area)
@@ -237,7 +239,9 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
         company_area = request.data.get("company_area")
         CompanyHolidayArea.objects.filter(holiday_type__id=holiday_type).delete()
         company_holiday_area = [
-            CompanyHolidayArea(company_area=comp_area, holiday_type=holiday_type)
+            CompanyHolidayArea(
+                company_area=CompanyArea.objects.get(id=comp_area),
+                holiday_type=CompanyHoliday.objects.get(id=holiday_type))
             for comp_area in company_area
         ]
         CompanyHolidayArea.objects.bulk_create(company_holiday_area)
