@@ -212,7 +212,7 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
     queryset = CompanyHolidayArea.objects.all()
     serializer_class = CompanyHolidayAreaSerializers
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["company_area", "holiday_type"]
+    filterset_fields = ["company_area", "holiday_type__holiday_name","company_area__company_name"]
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
