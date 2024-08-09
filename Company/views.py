@@ -226,6 +226,9 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
                 company_area=CompanyArea.objects.get(id=comp_area),
                 holiday_type=CompanyHoliday.objects.get(id=holiday_type))
             for comp_area in company_area
+            if not CompanyHolidayArea.objects.get(
+                company_area__id=comp_area,
+                holiday_type__id=holiday_type)
         ]
         CompanyHolidayArea.objects.bulk_create(company_holiday_area)
         return Response(
@@ -243,6 +246,9 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
                 company_area=CompanyArea.objects.get(id=comp_area),
                 holiday_type=CompanyHoliday.objects.get(id=holiday_type))
             for comp_area in company_area
+            if not CompanyHolidayArea.objects.get(
+                company_area__id=comp_area,
+                holiday_type__id=holiday_type)
         ]
         CompanyHolidayArea.objects.bulk_create(company_holiday_area)
         return Response(
