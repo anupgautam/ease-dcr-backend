@@ -56,6 +56,9 @@ class CompanyUserViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.order_by("user_name__first_name")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.exclude(role_name__role_name__role_name="admin")
 
 
 class CompanyUserWithoutPagination(viewsets.ModelViewSet):
@@ -67,6 +70,7 @@ class CompanyUserWithoutPagination(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.order_by("user_name__first_name")
+    
 
 
 class CompanyUserRoleViewsetWithoutPagination(viewsets.ModelViewSet):
@@ -84,6 +88,9 @@ class CompanyUserRoleViewsetWithoutPagination(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.order_by("user_name__first_name")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.exclude(role_name__role_name__role_name="admin")
 
 
 class CompanyUserRoleViewset(viewsets.ModelViewSet):
