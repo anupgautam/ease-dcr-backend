@@ -147,6 +147,9 @@ class CompanyRolesViewset(viewsets.ModelViewSet):
     serializer_class = CompanyRolesSerializers
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["company_name"]
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.exclude(role_name="admin")
 
 
 class NoticeViewset(viewsets.ModelViewSet):
