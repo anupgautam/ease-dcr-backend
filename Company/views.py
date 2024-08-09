@@ -149,7 +149,7 @@ class CompanyRolesViewset(viewsets.ModelViewSet):
     filterset_fields = ["company_name"]
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.exclude(role_id__role_name="admin")
+        return queryset.exclude(role_name__role_name="admin")
 
 
 class NoticeViewset(viewsets.ModelViewSet):
