@@ -3,7 +3,6 @@ import json
 from channels.consumer import AsyncConsumer
 from channels.exceptions import StopConsumer
 
-from chat.models import Chat, User, PushNotification
 from .utils import (
     get_initiator_count, get_receiver_count, add_data_without_group,
     get_push_notification_data)
