@@ -15,10 +15,13 @@ from channels.auth import AuthMiddlewareStack
 import chat.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DCR.settings')
-
-# Ensure Django settings are loaded
 django.setup()
 
+# Debug: Verify if the apps are ready
+if django.apps.apps_ready:
+    print("Django apps are ready.")
+else:
+    print("Django apps are not ready.")
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
