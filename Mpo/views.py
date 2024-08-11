@@ -320,7 +320,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
 
     def is_locked_tour_plan_mpo(self, request, is_locked=False):
         company_lock_day = CompanyRolesTPLock.objects.get(
-            role_name=CompanyUserRole.objects.get(
+            company_roles=CompanyUserRole.objects.get(
             id=request.GET.get("mpo_name")
         ).role_name).tp_lock_days
         latest_date_list = [date(nepali_today.year, nepali_today.month, nepali_today.day - day)
