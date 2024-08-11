@@ -90,8 +90,8 @@ def get_list_of_most_ordered_products_of_stockist(company_name):
 
 def get_list_of_most_ordered_products_of_chemist(company_name):
     data = []
-    company_products = CompanyProduct.objects.filter(
-        company_name=company_name
+    company_products = DcrForChemistProduct.objects.filter(
+        ordered_product__company_name=company_name
     )
     top_10_products = ChemistOrderedProductInformationMap.objects.filter(
         product_id__in=company_products
@@ -100,8 +100,8 @@ def get_list_of_most_ordered_products_of_chemist(company_name):
         'information_id__ordered_quantity')).order_by(
         '-total_ordered_quantity')[:10]
     for i in top_10_products:
-        instance = CompanyProduct.objects.get(id=i['product_id'])
-        data.append({'product_name':instance.product_name.product_name, 'ordered_quantity':i['total_ordered_quantity']})
+        instance = DcrForChemistProduct.objects.get(id=i['product_id'])
+        data.append({'product_name':instance.ordered_product.product_name.product_name, 'ordered_quantity':i['total_ordered_quantity']})
     return data
     
 def get_list_of_most_promoted_products_of_chemist(company_name):

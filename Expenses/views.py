@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import status
 from django.db.models import Sum
+from datetime import datetime
 
 
 from Expenses.serializers import *
@@ -15,11 +16,15 @@ from django.http import JsonResponse
 from Account.pagination import CustomPagination
 from Doctors.search import UserWiseTrigramSearch, TrigramSearch
 from Account.pagination import paginate_json_response
-from .utils import application_notification_send
+from .utils import (application_notification_send,
+                    get_total_saturdays)
 from Mpo.utils import (get_user_id,
                        get_user_name,
                        get_upper_level_user_id,
                        general_notification_send)
+from DCRUser.models import CompanyUserAttendance
+from Company.models import CompanyHolidayDate
+
 
 class ExpensesTypeViewset(viewsets.ModelViewSet):
     model = ExpensesType
@@ -205,6 +210,99 @@ class UploadsViewset(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response("Search data doesnot exists")
+
+
+# {
+
+# sick_leave:1,
+
+# casual_leave:1,
+
+# paid_leave:1,
+
+# leave_without_paid:1,
+
+# holiday:2,
+
+# saturday: 4,
+
+# [{
+
+# attendance_date:date huna paro,
+
+# leave_type: '',
+
+# leave:true or false
+
+# holiday: true or false,
+
+# saturday: false or true,
+
+# }]
+
+# }
+@api_view(['post'])
+def get_attendance(request):
+    month = request.data.get('month')
+    month_value = request.data.get('month_value')
+    year = request.data.get('year')
+    user_id = request.data.get('user_id')
+    company_name = CompanyUserRole.objects.get(
+                    id=user_id).company_name.company_id
+    # is_saturday = lambda d : True if d.weekday()==5 else False
+    # print(is_saturday(datetime(2024,8,11)))
+    # saturday_count = get_total_saturdays(month=month_value,
+    #                                     year=year)
+    attendance_data = CompanyUserAttendance.objects.filter(
+                                user_id=user_id,
+                                month=month_value,
+                                attendance_date__year=year)
+    attendance_serializer = MpoWiseLeaveApplicationSerializers(
+        attendance_data,
+        many=True
+    )
+    casual_leave_count = MpoWiseLeaveApplication.objects.filter(
+                                mpo_name=user_id,
+                                application_id__leave_type="casual_leave",
+                                application_id__is_approved=True
+                                ).count()
+    sick_leave_count = MpoWiseLeaveApplication.objects.filter(
+                                mpo_name=user_id,
+                                application_id__leave_type="sick_leave",
+                                application_id__is_approved=True
+                                ).count()
+    paid_leave_count = MpoWiseLeaveApplication.objects.filter(
+                                mpo_name=user_id,
+                                application_id__leave_type="paid_leave",
+                                application_id__is_approved=True
+                                ).count()
+    leave_without_pay_count = MpoWiseLeaveApplication.objects.filter(
+                                mpo_name=user_id,
+                                application_id__leave_type="leave_without_paid",
+                                application_id__is_approved=True
+                                ).count()
+    holiday_count = CompanyHolidayDate.objects.filter(
+                                company_name=company_name,
+                                holiday_date__month=month_value,
+                                ).count()
+    saturday_count = CompanyUserAttendance.objects.filter(
+                                        user_id=user_id,
+                                        month=month,
+                                        attendance_date__year=year,
+                                        is_saturday=True).count()
+    data = {
+        "sick_leave":sick_leave_count,
+        "casual_leave":casual_leave_count,
+        "paid_leave":paid_leave_count,
+        "leave_without_pay_leave":leave_without_pay_count,
+        "holiday_leave":holiday_count,
+        "saturday":saturday_count,
+        "attendance_data":attendance_serializer.data
+    }
+    return JsonResponse(data,
+                        status=201,headers={
+                                'content_type':'application/json'
+                                }, safe=False)
 
 
 @api_view(['post'])

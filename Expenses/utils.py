@@ -102,6 +102,16 @@ def upload_data(request):
     return data
 
 
+def get_total_saturdays(year, month):
+    first_day = datetime(year, month, 1)
+    saturday_count = 0
+    while first_day.month == month:
+        if first_day.weekday() == 5:
+            saturday_count += 1
+        first_day += timedelta(days=1)
+    return saturday_count
+
+
 FIRST_QUATER_MONTH = ["January", "February", "March",]
 SECOND_QUATER_MONTH = ["April", "May", "June",]
 THIRD_QUATER_MONTH = ["July", "August", "September",]
