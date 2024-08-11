@@ -17,11 +17,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DCR.settings')
 django.setup()
 import chat.routing
 
-# Debug: Verify if the apps are ready
-if django.apps.apps_ready:
-    print("Django apps are ready.")
-else:
-    print("Django apps are not ready.")
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
