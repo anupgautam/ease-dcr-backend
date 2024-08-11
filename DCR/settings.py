@@ -34,7 +34,6 @@ CSRF_TRUSTED_ORIGINS=['https://api.easesfa.com']
 
 # Application definition
 INSTALLED_APPS = [
-    "daphne",
     "channels",
     "django.contrib.admin",
     "django.contrib.auth",
