@@ -131,6 +131,6 @@ class CompanySalaryRoles(models.Model):
 class CompanyHolidayDate(models.Model):
     company_name = models.ForeignKey(Company, on_delete=models.CASCADE)
     holiday_date = models.DateField()
-    company_holiday_area = models.ForeignKey(
-        CompanyHolidayArea, on_delete=models.CASCADE, null=True, blank=True
+    company_holiday_type = models.ForeignKey(
+        CompanyHoliday, on_delete=models.CASCADE, null=True, blank=True
     )
