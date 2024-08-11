@@ -3,6 +3,7 @@ from Company.models import (
     Company,
     CompanyHolidayArea,
     CompanyHolidayDate,
+    CompanyRolesTPLock,
     Roles,
     WorkingHour,
     Division,
@@ -214,3 +215,10 @@ class CompanyHolidayDateSerializers(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = CompanyHolidayDate
+
+
+class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        fields = "__all__"
+        model = CompanyRolesTPLock

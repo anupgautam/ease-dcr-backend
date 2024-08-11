@@ -1,4 +1,5 @@
 from Chemist.models import CompanyWiseChemist
+from Company.models import CompanyRolesTPLock
 from DCRUser.models import CompanyUserRole
 from DCRUser.serializers import CompanyUserRoleSerializers
 from Doctors.models import CompanyWiseDoctor
@@ -276,6 +277,21 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["GET"])
     def get_tour_plan_mpo(self, request):
+        company_user_role = CompanyUserRole.objects.get(id=request.GET.get("mpo_name"))
+        if company_user_role.is_tp_locked:
+            return Response(
+                data={"status": "Your user has been locked"},
+                      status=status.HTTP_200_OK)
+
+        if self.is_locked_tour_plan_mpo(request):
+            company_user_role.is_tp_locked = True
+            company_user_role.save()
+            self.is_locked_tour_plan_mpo(is_locked=True)
+
+            return Response(
+                data={"status": "Your user has been locked"},
+                      status=status.HTTP_200_OK)
+        
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             (
                 Q(
@@ -295,21 +311,23 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             ),
             mpo_name=request.GET.get("mpo_name"),
             is_approved=True,
+            is_locked=False
         )
         serializer = CompanyMpoTourPlanSerializer(
             tour_plan_list, many=True, context={"request": request}
         )
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=["GET"])
-    def get_locked_tour_plan_list_mpo(self, request):
+    def is_locked_tour_plan_mpo(self, request, is_locked=False):
+        company_lock_day = CompanyRolesTPLock.objects.get(
+            role_name=CompanyUserRole.objects.get(
+            id=request.GET.get("mpo_name")
+        ).role_name).tp_lock_days
+        latest_date_list = [date(nepali_today.year, nepali_today.month, nepali_today.day - day)
+                            for day in range(1, company_lock_day+1)]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             ~Q(
-                tour_plan__tour_plan__select_the_date_id__in=[
-                    date(nepali_today.year, nepali_today.month, nepali_today.day - 1),
-                    date(nepali_today.year, nepali_today.month, nepali_today.day - 2),
-                    date(nepali_today.year, nepali_today.month, nepali_today.day - 3),
-                ]
+                tour_plan__tour_plan__select_the_date_id__in=latest_date_list
             ),
             (
                 Q(tour_plan__tour_plan__is_dcr_added=False)
@@ -324,14 +342,16 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
                 nepali_today.year, nepali_today.month, nepali_today.day
             ),
         )
-        serializer = CompanyMpoTourPlanSerializer(
-            tour_plan_list, many=True, context={"request": request}
-        )
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        if is_locked:
+            tour_plan_list.update(is_locked=True)
+            return {}
+        return len(tour_plan_list) == company_lock_day
+        # serializer = CompanyMpoTourPlanSerializer(
+        #     tour_plan_list, many=True, context={"request": request}
+        # )
+        # return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        print("hamro data")
-        print(request.data)
         # data = mpo_data_transmission(request)
         serializer = CompanyMpoTourPlanSerializer(
             data=request.data, many=True, context={"request": request}

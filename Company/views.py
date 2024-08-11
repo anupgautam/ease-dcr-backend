@@ -10,6 +10,7 @@ from rest_framework.decorators import action, permission_classes
 
 from Company.serializers import (
     CompanyHolidayDateSerializers,
+    CompanyRolesTPLockSerializers,
     CompanySerializers,
     DivisionSerializers,
     RolesSerializers,
@@ -29,6 +30,7 @@ from Company.serializers import (
 from Company.models import (
     Company,
     CompanyHolidayDate,
+    CompanyRolesTPLock,
     Division,
     Roles,
     Notices,
@@ -151,6 +153,10 @@ class CompanyRolesViewset(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         return queryset.exclude(role_name__role_name="admin")
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.exclude(role_name="admin")
+
 
 class NoticeViewset(viewsets.ModelViewSet):
     queryset = Notices.objects.all()
@@ -239,7 +245,12 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=["patch"])
+    @permission_classes(
+        [
+            IsAuthenticated,
+        ]
+    )
     def bulk_update_company_holiday(self, request):
         holiday_type = request.data.get("holiday_type")
         company_area = request.data.get("company_area")
@@ -266,6 +277,17 @@ class CompanyHolidayDateViewset(viewsets.ModelViewSet):
     serializer_class = CompanyHolidayDateSerializers
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["company_name"]
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+
+class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
+    model = CompanyRolesTPLock
+    queryset = CompanyRolesTPLock.objects.all()
+    serializer_class = CompanyRolesTPLockSerializers
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["company_roles"]
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)

@@ -134,3 +134,8 @@ class CompanyHolidayDate(models.Model):
     company_holiday_type = models.ForeignKey(
         CompanyHoliday, on_delete=models.CASCADE, null=True, blank=True
     )
+
+
+class CompanyRolesTPLock(models.Model):
+    company_roles = models.ForeignKey(CompanyRoles, on_delete=models.CASCADE, null=True, blank=True)
+    tp_lock_days = models.IntegerField(null=True, blank=True)

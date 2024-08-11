@@ -15,7 +15,8 @@ from Company.views import (
     CompanyRolesSalaryViewset,
     CompanyHolidayViewset,
     CompanyHolidayAreaViewset,
-    CompanyHolidayDateViewset
+    CompanyHolidayDateViewset,
+    CompanyRolesTPLockViewset
 )
 
 
@@ -42,4 +43,5 @@ router.register(r"company-roles-salary", CompanyRolesSalaryViewset, basename="co
 router.register(r"company-holiday", CompanyHolidayViewset, basename="company_holiday")
 router.register(r"company-holiday-area", CompanyHolidayAreaViewset, basename="company_holiday_area")
 router.register(r"company-holiday-date", CompanyHolidayDateViewset, basename="company_holiday_date")
+router.register(r"company-roles-tp-lock", CompanyRolesTPLockViewset, basename="company_roles_tp_lock")
 urlpatterns = router.urls

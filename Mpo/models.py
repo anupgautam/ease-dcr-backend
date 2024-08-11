@@ -136,6 +136,7 @@ class CompanyMpoTourPlan(models.Model):
                                 )
     is_approved = models.BooleanField(default=False,blank=True, null=True)
     is_missed_call_calculated = models.BooleanField(default=False, blank=True, null=True)
+    is_locked = models.BooleanField(default=False, null=False, blank=False)
     class Meta:
         ordering = ['-id']
 
