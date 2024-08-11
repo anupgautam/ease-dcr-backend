@@ -19,6 +19,7 @@ urlpatterns = [
     path('get-leave-user/', get_leave_user),
     path('get-leave-user-according-to-role/', get_leave_user_according_to_role),
     path('get-leave-user-according-to-executives/', get_leave_user_according_to_executive_level),
-    path('get-company-sales/', get_company_sales)
+    path('get-company-sales/', get_company_sales),
+    path('get-user-attendance/', get_attendance)
 ]
 urlpatterns += router.urls

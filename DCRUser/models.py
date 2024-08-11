@@ -85,5 +85,5 @@ class CompanyUserAttendance(models.Model):
     month = models.CharField(null=True, blank=True, max_length=50, default="Baisakh")
     is_leave = models.BooleanField(null=False, blank=False, default=False)
     leave_type = models.CharField(null=True, blank=True, max_length=100)
-
+    is_saturday = models.BooleanField(null=False,blank=False, default=False)
 
