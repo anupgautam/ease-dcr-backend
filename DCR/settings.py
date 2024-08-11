@@ -34,7 +34,6 @@ CSRF_TRUSTED_ORIGINS=['https://api.easesfa.com']
 
 # Application definition
 INSTALLED_APPS = [
-    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -52,6 +51,8 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework_simplejwt.token_blacklist",
     "nepali_datetime_field",
+    "daphne",
+    "channels",
     # 'query_counter',
     # 'debug_toolbar',
     "Company",
