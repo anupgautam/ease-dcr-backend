@@ -79,11 +79,15 @@ class CompanyWiseDoctorSerializer(serializers.ModelSerializer):
                                             instance.company_name).data
             response['doctor_name'] = DoctorSerializers(
                                             instance.doctor_name).data
+            response['doctor_specialization'] = DoctorSerializers(
+                                            instance.doctor_specialization).data
         except:
             response['company_name'] = CompanySerializers(
                                         instance['company_name']).data
             response['doctor_name'] = DoctorSerializers(
                                         instance['doctor_name']).data
+            response['doctor_specialization'] = DoctorSerializers(
+                                            instance.doctor_specialization).data
         return response
 
 
