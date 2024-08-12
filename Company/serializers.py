@@ -222,11 +222,12 @@ class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = CompanyRolesTPLock
+    
+    def get_company_roles(self, obj):
+        return str(obj.company_roles)
 
     def to_representation(self, instance):
-        response = super().to_representation(instance)
-        if isinstance(instance, dict):
-            response["company_roles"] = RolesSerializers(instance["company_roles"]).data
-        else:
-            response["company_roles"] = RolesSerializers(instance.company_roles).data
-        return response
+        representation = super().to_representation(instance)
+        # Customize representation if needed
+        return representation
+
