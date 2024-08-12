@@ -289,3 +289,8 @@ class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['company_roles'] = CompanyRoles(
+                                    instance.role_name).data
+        return response
