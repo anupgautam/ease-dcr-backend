@@ -116,6 +116,7 @@ class CompanyRoles(models.Model):
     )
     priority_value = models.IntegerField(null=True, blank=True)
     role_name_value = models.CharField(null=True, blank=True, max_length=100)
+    is_highest_priority = models.BooleanField(default=False, null=False, blank=False)
 
     def __str__(self):
         return self.role_name.role_name
