@@ -4,12 +4,26 @@ from Doctors.models import *
 from DCRUser.serializers import CompanyUserRoleSerializers
 
 
+
+class CompanyDoctorSpecializationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyDoctorSpecialization
+        fields = '__all__'
+    
+    
+
 class DoctorSerializers(serializers.ModelSerializer):
     id = serializers.IntegerField(allow_null=True, required=False) 
 
     class Meta:
         model = Doctor
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['doctor_specialization'] = CompanyDoctorSpecializationSerializer(
+                                    instance.doctor_specialization).data
+        return response
 
 
 class DoctorCategorySerializers(serializers.ModelSerializer):
@@ -100,39 +114,6 @@ class CompanyWiseDoctorSerializer(serializers.ModelSerializer):
 #                                     instance.area_name).data
 #         return response
 
-
-class CompanyDoctorSpecializationSerializer(serializers.ModelSerializer):
-    # category_name = DoctorCategorySerializers()
-    class Meta:
-        model = CompanyDoctorSpecialization
-        fields = '__all__'
-    
-    # def create(self, validated_data):
-    #     doctor_category_instance = DoctorCategory(
-    #         category_name=validated_data['category_name']['category_name']
-    #     )
-    #     doctor_category_instance.save()
-    #     instance = CompanyDoctorCategory(
-    #         category_name=doctor_category_instance,
-    #         company_name=validated_data['company_name']
-    #     )
-    #     instance.save()
-    #     return instance
-    
-    # def update(self, instance, validated_data):
-    #     doctor_category_instance = DoctorCategory.objects.get(
-    #         id=instance.category_name.id)
-    #     doctor_category_instance.category_name = validated_data['category_name']['category_name']
-    #     doctor_category_instance.save()
-    #     instance.category_name = doctor_category_instance
-    #     instance.save()
-    #     return instance
-    # def to_representation(self, instance):
-    #     response = super().to_representation(instance)
-    #     response['company_name'] = CompanySerializers(
-    #                                 instance.company_name).data
-    #     return response
-    
 
 
 class AddDoctorSerializer(serializers.ModelSerializer):
