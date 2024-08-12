@@ -285,7 +285,7 @@ class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
     queryset = CompanyRolesTPLock.objects.all()
     serializer_class = CompanyRolesTPLockSerializers
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["company_roles"]
+    filterset_fields = ["company_roles__company_name","company_roles__role_name__role_name"]
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
