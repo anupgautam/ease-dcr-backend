@@ -225,7 +225,6 @@ class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['company_roles'] = CompanyRoles(
+        response['role_name'] = CompanyRoles(
                                     instance.role_name).data
-        print('response',response['company_roles'])
-        # return response
+        return response
