@@ -222,3 +222,9 @@ class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = CompanyRolesTPLock
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['company_roles'] = CompanyRoles(
+                                    instance.role_name).data
+        return response
