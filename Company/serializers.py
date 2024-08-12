@@ -224,10 +224,11 @@ class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
         model = CompanyRolesTPLock
     
     def get_company_roles(self, obj):
-        return str(obj.company_roles)
+        if obj.company_roles and obj.company_roles.role_name:
+            return obj.company_roles.role_name.role_name
+        return None
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        # Customize representation if needed
         return representation
 
