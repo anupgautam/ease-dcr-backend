@@ -273,7 +273,7 @@ class CompanyHolidayDateViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def bulk_create_holiday_date(self, request):
         company_name = request.data.get('company_name')
         company_holiday_type = request.data.get('company_holiday_type', None)
