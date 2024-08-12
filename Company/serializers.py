@@ -218,7 +218,7 @@ class CompanyHolidayDateSerializers(serializers.ModelSerializer):
 
 
 class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
-
+    company_roles = CompanyRolesSerializers()
     class Meta:
         fields = "__all__"
         model = CompanyRolesTPLock
