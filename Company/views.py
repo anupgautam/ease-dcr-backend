@@ -273,18 +273,6 @@ class CompanyHolidayDateViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
-    
-
-class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
-    model = CompanyRolesTPLock
-    queryset = CompanyRolesTPLock.objects.all()
-    serializer_class = CompanyRolesTPLockSerializers
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["company_roles__company_name","company_roles__role_name__role_name"]
-
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-    
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def bulk_create_holiday_date(self, request):
         company_name = request.data.get('company_name')
@@ -308,4 +296,15 @@ class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
         serializer = self.get_serializer(created_objects, many=True)
         
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
+    model = CompanyRolesTPLock
+    queryset = CompanyRolesTPLock.objects.all()
+    serializer_class = CompanyRolesTPLockSerializers
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["company_roles__company_name","company_roles__role_name__role_name"]
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
   
