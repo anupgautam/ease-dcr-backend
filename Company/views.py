@@ -284,4 +284,28 @@ class CompanyRolesTPLockViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+    
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def bulk_create_holiday_date(self, request):
+        company_name = request.data.get('company_name')
+        company_holiday_type = request.data.get('company_holiday_type', None)
+        holiday_dates = request.data.get('holiday_date', [])
+        
+        if not company_name or not holiday_dates:
+            return Response({"detail": "Company name and holiday dates are required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        holiday_date_objects = [
+            CompanyHolidayDate(
+                company_name_id=company_name,
+                company_holiday_type_id=company_holiday_type,
+                holiday_date=date
+            )
+            for date in holiday_dates
+        ]
+        
+        created_objects = CompanyHolidayDate.objects.bulk_create(holiday_date_objects)
+        
+        serializer = self.get_serializer(created_objects, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
   
