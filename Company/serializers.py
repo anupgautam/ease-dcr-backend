@@ -124,6 +124,7 @@ class CompanyRolesSerializers(serializers.ModelSerializer):
             "role_name",
             "priority_value",
             "role_name_value",
+            "is_highest_priority",
         ]
 
     def to_representation(self, instance):
