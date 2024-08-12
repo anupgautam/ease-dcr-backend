@@ -269,7 +269,7 @@ class CompanyHolidayDateViewset(viewsets.ModelViewSet):
     queryset = CompanyHolidayDate.objects.all()
     serializer_class = CompanyHolidayDateSerializers
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["company_name"]
+    filterset_fields = ["company_name","company_holiday_type"]
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
