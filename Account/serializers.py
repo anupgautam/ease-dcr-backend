@@ -103,7 +103,14 @@ class UserLoginSerializer(serializers.ModelSerializer):
     company_user_id = serializers.SerializerMethodField("get_company_user_id")
     user_id = serializers.SerializerMethodField("get_user_id")
     company_area_id = serializers.SerializerMethodField("get_company_area_id")
+    is_highest_priority = serializers.SerializerMethodField("get_is_highest_priority")
 
+    def get_is_highest_priority(self, data):
+        user_id = User.objects.get(email=data["email"])
+        if not CompanyUserRole.objects.filter(user_name=user_id).exists():
+            return None
+        company_user_role_instance = CompanyUserRole.objects.get(user_name=user_id)
+        return company_user_role_instance.role_name.is_highest_priority
     def get_role(self, data):
         user_id = User.objects.get(email=data["email"])
         if not CompanyUserRole.objects.filter(user_name=user_id).exists():
@@ -165,6 +172,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
             "company_user_id",
             "user_id",
             "company_area_id",
+            "is_highest_priority",
         ]
 
 

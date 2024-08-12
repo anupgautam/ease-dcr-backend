@@ -56,7 +56,6 @@ class UserCreationView(APIView):
 
 class UserLoginView(APIView):
     def post(self, request, format=None):
-        print(request.data)
         serializer = UserLoginSerializer(data=request.data)
         if User.objects.filter(email=request.data.get("email")).exists():
             if serializer.is_valid(raise_exception=True):
@@ -69,6 +68,7 @@ class UserLoginView(APIView):
                 company_user_id = serializer.data.get("company_user_id")
                 user_id = serializer.data.get("user_id")
                 company_area_id = serializer.data.get("company_area_id")
+                is_highest_priority = serializer.data.get("is_highest_priority")
                 if email is None or password is None:
                     return Response(
                         data={"No email or password!!!"},
@@ -98,6 +98,7 @@ class UserLoginView(APIView):
                             "company_user_id": company_user_id,
                             "user_id": user_id,
                             "company_area_id": company_area_id,
+                            "is_highest_priority": is_highest_priority,
                         },
                         status=status.HTTP_200_OK,
                     )
