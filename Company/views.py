@@ -243,12 +243,7 @@ class CompanyHolidayAreaViewset(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-    @action(detail=True, methods=["patch"])
-    @permission_classes(
-        [
-            IsAuthenticated,
-        ]
-    )
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def bulk_update_company_holiday(self, request):
         holiday_type = request.data.get("holiday_type")
         company_area = request.data.get("company_area")
