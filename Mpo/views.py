@@ -319,13 +319,10 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def is_locked_tour_plan_mpo(self, request, is_locked=False):
-        print(CompanyUserRole.objects.get(
-            id=request.GET.get("mpo_name")
-        ).role_name)
         company_lock_day = CompanyRolesTPLock.objects.get(
             company_roles=CompanyUserRole.objects.get(
             id=request.GET.get("mpo_name")
-        ).role_name).tp_lock_days
+        )).tp_lock_days
         latest_date_list = [date(nepali_today.year, nepali_today.month, nepali_today.day - day)
                             for day in range(1, company_lock_day+1)]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
@@ -377,7 +374,6 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
                 data={"Succesfully created tourplan"}, status=status.HTTP_200_OK
             )
         else:
-            print(serializer.errors)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
@@ -388,7 +384,6 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             update_instance, data=data, context={"request": request}
         )
         if serializer.is_valid():
-            print(data)
             serializer.save()
             # if get_upper_level_user_id(update_instance.mpo_name.id) and get_user_id(update_instance.mpo_name.id):
             #     general_notification_send(
@@ -404,7 +399,6 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             # )
             return Response(serializer.data)
         else:
-            print(serializer.errors)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=["post"])
@@ -553,7 +547,6 @@ def tour_plan_bulk_update_by_month(request):
 
 @api_view(["POST"])
 def get_the_mpo_tourplan_of_30_days(request):
-    print(request.data)
     current_date = datetime.now()
     new_date = current_date + timedelta(days=30)
     new_date_string = new_date.strftime("%Y-%m-%d")
