@@ -319,10 +319,13 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def is_locked_tour_plan_mpo(self, request, is_locked=False):
+        print("hello",CompanyUserRole.objects.get(
+            id=request.GET.get("mpo_name")
+        ).role_name)
         company_lock_day = CompanyRolesTPLock.objects.get(
             company_roles=CompanyUserRole.objects.get(
             id=request.GET.get("mpo_name")
-        )).tp_lock_days
+        ).role_name).tp_lock_days
         latest_date_list = [date(nepali_today.year, nepali_today.month, nepali_today.day - day)
                             for day in range(1, company_lock_day+1)]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
