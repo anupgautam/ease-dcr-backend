@@ -27,20 +27,20 @@ SECRET_KEY = "django-insecure-n2j07y-lyf&z6o-t3a+hz&kr(9bp6fqxryjey$tij1gi3x=80d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["api.easesfa.com"]
+ALLOWED_HOSTS = ["*"]
 
 CSRF_TRUSTED_ORIGINS=['https://api.easesfa.com']
 
 
 # Application definition
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "daphne",
-    "channels",
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
