@@ -72,7 +72,7 @@ class CompanyUserRole(models.Model):
     station_type = models.CharField(max_length=200,
                                     blank=True,
                                     null=True)
-    is_tp_locked = models.BooleanField(null=True, blank=True)
+    is_tp_locked = models.BooleanField(null=False, blank=False, default=False)
     objects = CompanyManger()
 
 
