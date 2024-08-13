@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
             phone_number=phone_number,
         )
         if password == "":
-            password = "12345"
+            password = "12345678"
         user.set_password(password)
         user.role_name = role_name
         user.company_name = company_name

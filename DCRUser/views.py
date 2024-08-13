@@ -196,6 +196,29 @@ class CompanyUserAttendanceViewset(viewsets.ModelViewSet):
         "leave_type",
     ]
 
+@api_view(["POST"])
+def make_user_present(request):
+    company_instance = Company.objects.get(
+        company_id=request.data.get('company_name')
+    )
+    user_instance = CompanyUserRole.objects.get(
+        id=request.data.get('user_id')
+    )
+    attendance_date = request.data.get('attendance_date')
+    month = request.data.get('month')
+    attendance_instance = CompanyUserAttendance(
+        company_name=company_instance,
+        user_id=user_instance,
+        attendance_date=attendance_date,
+        month=month
+    )
+    attendance_instance.save()
+    return JsonResponse(
+            {"success":"User marked present"}, status=200, headers={"content_type": "application/json"}, safe=False
+        )
+
+
+
 
 # This api view returns the upper level company users according the role id
 @api_view(["POST"])
