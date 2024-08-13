@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-n2j07y-lyf&z6o-t3a+hz&kr(9bp6fqxryjey$tij1gi3x=80d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["api.easesfa.com"]
 
 CSRF_TRUSTED_ORIGINS=['https://api.easesfa.com']
 
@@ -140,7 +140,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "dcr",
         "USER": "postgres",
-        "HOST": "159.65.145.104",
+        "HOST": "localhost",
         "PASSWORD": "password",
         "PORT": "5432",
     }
