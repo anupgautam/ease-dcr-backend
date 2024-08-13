@@ -219,7 +219,11 @@ class CompanyHolidayDateSerializers(serializers.ModelSerializer):
 
 
 class CompanyRolesTPLockSerializers(serializers.ModelSerializer):
-    company_roles = CompanyRolesSerializers()
     class Meta:
         fields = "__all__"
         model = CompanyRolesTPLock
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['company_roles'] = CompanyRolesSerializers(
+                                    instance.company_roles).data
+        return response
