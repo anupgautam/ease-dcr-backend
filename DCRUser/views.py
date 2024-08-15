@@ -363,29 +363,32 @@ def get_higher_level_instances(user_id, data):
 
 @api_view(["POST"])
 def get_all_the_upper_level_users_from_company_user_role_id(request):
+    print("hamro request")
+    print("id ho hai",request.data.get('id'))
+    user_dict = {}
     user_id = request.data.get("id")
-    if not user_id:
+    data = []
+    if request.data.get("id"):
+        data = get_higher_level_instances(user_id, data)
+        print(data)
+    else:
         return Response(
             status=status.HTTP_400_BAD_REQUEST,
             data={"data": "Sorry! No such user present"},
         )
-
-    data = []
-    data = get_higher_level_instances(user_id, data)
-
-    if not data:
+    if len(data) == 0:
         return JsonResponse(
             data, status=200, headers={"content_type": "application/json"}, safe=False
         )
-
     serializer = CompanyUserRoleSerializers(data, many=True)
+    print("hamro data")
+    print(serializer.data)
     return JsonResponse(
         serializer.data,
         status=200,
         headers={"content_type": "application/json"},
         safe=False,
     )
-
 
 
 @api_view(["POST"])
