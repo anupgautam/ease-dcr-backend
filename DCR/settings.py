@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "chat",
     "Stat",
     "sales",
+    "bsdate",
 ]
 
 MIDDLEWARE = [
