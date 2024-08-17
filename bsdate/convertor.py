@@ -25,7 +25,7 @@ class BSDateConverter:
     }
 
     def __init__(self):
-        self.ad_to_bs_start_date = datetime(2023, 4, 14)  # Start date for BS 2080-01-01
+        self.ad_to_bs_start_date = datetime(2023, 4, 14) 
         self.bs_start_year = 2080
 
     def convert_ad_to_bs(self, ad_date):
