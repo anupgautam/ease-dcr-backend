@@ -40,6 +40,7 @@ from Mpo.serializers import (
     ShiftWiseTourplanSerializer,
     TourplanSerializer,
 )
+from bsdate.convertor import BSDateConverter
 from dailycallrecord.utils import nepali_month_to_digit
 from .utils import tourplan_notification_send
 from Company.serializers import CompanySerializers
@@ -58,9 +59,7 @@ from .utils import (
     get_year_month_from_date,
 )
 from .backends import CaseInsensitiveDjangoFilterBackend
-from nepali_date_converter import nepali_today
-from query_counter.decorators import queries_counter
-from django.utils.decorators import method_decorator
+from datetime import datetime
 
 
 class ShiftViewset(viewsets.ModelViewSet):
@@ -277,6 +276,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["GET"])
     def get_tour_plan_mpo(self, request):
+        convertor = BSDateConverter()
         company_user_role = CompanyUserRole.objects.get(id=request.GET.get("mpo_name"))
         if company_user_role.is_tp_locked:
             return Response(
@@ -296,15 +296,15 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             (
                 Q(
                     tour_plan__tour_plan__select_the_date_id__in=[
-                        date(
-                            nepali_today.year, nepali_today.month, nepali_today.day 
-                        ),
-                        date(
-                            nepali_today.year, nepali_today.month, nepali_today.day - 1
-                        ),
-                        date(
-                            nepali_today.year, nepali_today.month, nepali_today.day - 2
-                        ),
+                        convertor.convert_ad_to_bs(date(
+                            datetime.year, datetime.month, datetime.day 
+                        )),
+                        convertor.convert_ad_to_bs(date(
+                            datetime.year, datetime.month, datetime.day - 1
+                        )),
+                        convertor.convert_ad_to_bs(date(
+                            datetime.year, datetime.month, datetime.day - 2
+                        )),
                     ]
                 )
                 | Q(tour_plan__tour_plan__is_admin_opened=True)
@@ -319,12 +319,13 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def is_locked_tour_plan_mpo(self, request, is_locked=False):
+        convertor = BSDateConverter()
         company_lock_day = CompanyRolesTPLock.objects.get(
             company_roles=CompanyUserRole.objects.get(
             id=request.GET.get("mpo_name")
         ).role_name).tp_lock_days
-        latest_date_list = [date(nepali_today.year, nepali_today.month, nepali_today.day - day)
-                            for day in range(1, company_lock_day+1)]
+        latest_date_list = [convertor.convert_ad_to_bs(date(datetime.year, datetime.month, datetime.day - day)
+                            for day in range(1, company_lock_day+1))]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             ~Q(
                 tour_plan__tour_plan__select_the_date_id__in=latest_date_list
@@ -338,9 +339,10 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             mpo_name=request.GET.get("mpo_name"),
             is_approved=True,
             tour_plan__tour_plan__is_admin_opened=False,
-            tour_plan__tour_plan__select_the_date_id__lte=date(
-                nepali_today.year, nepali_today.month, nepali_today.day
+            tour_plan__tour_plan__select_the_date_id__lte=convertor.convert_ad_to_bs(date(
+                datetime.year, datetime.month, datetime.day
             ),
+            )
         )
         if is_locked:
             tour_plan_list.update(is_locked=True)
