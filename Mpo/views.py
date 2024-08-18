@@ -324,8 +324,10 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             company_roles=CompanyUserRole.objects.get(
             id=request.GET.get("mpo_name")
         ).role_name).tp_lock_days
-        latest_date_list = [convertor.convert_ad_to_bs_date(datetime.now() - timedelta(days=day)
-                            for day in range(1, company_lock_day+1))]
+        latest_date_list = [
+            convertor.convert_ad_to_bs_date(datetime.now() - timedelta(days=day))
+                for day in range(1, company_lock_day + 1)
+            ]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             ~Q(
                 tour_plan__tour_plan__select_the_date_id__in=latest_date_list
