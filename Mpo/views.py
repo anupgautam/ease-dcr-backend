@@ -296,13 +296,13 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             (
                 Q(
                     tour_plan__tour_plan__select_the_date_id__in=[
-                        convertor.convert_ad_to_bs(date(
+                        convertor.convert_ad_to_bs_date(date(
                             datetime.year, datetime.month, datetime.day 
                         )),
-                        convertor.convert_ad_to_bs(date(
+                        convertor.convert_ad_to_bs_date(date(
                             datetime.year, datetime.month, datetime.day - 1
                         )),
-                        convertor.convert_ad_to_bs(date(
+                        convertor.convert_ad_to_bs_date(date(
                             datetime.year, datetime.month, datetime.day - 2
                         )),
                     ]
@@ -324,7 +324,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             company_roles=CompanyUserRole.objects.get(
             id=request.GET.get("mpo_name")
         ).role_name).tp_lock_days
-        latest_date_list = [convertor.convert_ad_to_bs(date(datetime.year, datetime.month, datetime.day - day)
+        latest_date_list = [convertor.convert_ad_to_bs_date(date(datetime.year, datetime.month, datetime.day - day)
                             for day in range(1, company_lock_day+1))]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             ~Q(
@@ -339,7 +339,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             mpo_name=request.GET.get("mpo_name"),
             is_approved=True,
             tour_plan__tour_plan__is_admin_opened=False,
-            tour_plan__tour_plan__select_the_date_id__lte=convertor.convert_ad_to_bs(date(
+            tour_plan__tour_plan__select_the_date_id__lte=convertor.convert_ad_to_bs_date(date(
                 datetime.year, datetime.month, datetime.day
             ),
             )
