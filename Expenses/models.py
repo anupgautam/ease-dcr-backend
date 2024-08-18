@@ -7,7 +7,7 @@ from Company.models import (
 from DCRUser.models import CompanyUserRole
 from Mpo.models import CompanyMpoTourPlan
 from otherroles.models import HigherOrderTourplan
-from bsdate.fields import BSDateField
+
 
 
 
@@ -43,8 +43,8 @@ STATUS = (
 class LeaveApplication(models.Model):
     leave_type = models.CharField(max_length=200)
     leave_cause = models.TextField()
-    leave_from = BSDateField()
-    leave_to = BSDateField()
+    leave_from = models.DateField()
+    leave_to = models.DateField()
     leave_status = models.CharField(
         max_length = 20,
         choices = STATUS,
