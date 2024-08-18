@@ -341,9 +341,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             mpo_name=request.GET.get("mpo_name"),
             is_approved=True,
             tour_plan__tour_plan__is_admin_opened=False,
-            tour_plan__tour_plan__select_the_date_id__lte=convertor.convert_ad_to_bs_date(date(
-                datetime.year, datetime.month, datetime.day
-            ),
+            tour_plan__tour_plan__select_the_date_id__lte=convertor.convert_ad_to_bs_date(datetime.now()
             )
         )
         if is_locked:
