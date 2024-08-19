@@ -124,17 +124,17 @@ class TargetViewset(viewsets.ModelViewSet):
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
-            general_notification_send(
-                {
-                    'type':"Target",
-                    "receiver_id":get_user_id(data['target_to']),
-                    "sender_name":get_user_name(data['target_from']),
-                    "url":"",
-                    "sender_id":get_user_id(data['target_from']),
-                    "notification_title":"Tourplan Created",
-                    "notification_description":f"{get_user_name(data['target_from'])} has set a Target for you"
-                }
-            )
+            # general_notification_send(
+            #     {
+            #         'type':"Target",
+            #         "receiver_id":get_user_id(data['target_to']),
+            #         "sender_name":get_user_name(data['target_from']),
+            #         "url":"",
+            #         "sender_id":get_user_id(data['target_from']),
+            #         "notification_title":"Tourplan Created",
+            #         "notification_description":f"{get_user_name(data['target_from'])} has set a Target for you"
+            #     }
+            # )
             return Response(serializer.data)
         else:
             return Response(serializer.errors)

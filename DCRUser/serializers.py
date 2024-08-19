@@ -202,7 +202,6 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
         ).count()
         response["dcr_pending"] = tour_plan_list - tour_plan_dcr_list
         response["dcr_feeded"] = tour_plan_dcr_list
-        print(response)
         return response
 
 
