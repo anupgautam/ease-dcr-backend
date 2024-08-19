@@ -7,6 +7,7 @@ from Company.models import (
 from DCRUser.models import CompanyUserRole
 from Mpo.models import CompanyMpoTourPlan
 from otherroles.models import HigherOrderTourplan
+from .models import BSDateField
 
 
 
@@ -118,7 +119,7 @@ class ExpenseData(TimeStamp, models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True)
-    date = models.DateField(
+    date = BSDateField(
         blank=True,
         null=True
     )
