@@ -175,6 +175,80 @@ class UserLoginSerializer(serializers.ModelSerializer):
             "is_highest_priority",
         ]
 
+class UserLoginByIdSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+    role = serializers.SerializerMethodField("get_role")
+    company_id = serializers.SerializerMethodField("get_company_id")
+    division_name = serializers.SerializerMethodField("get_division_name")
+    company_user_role_id = serializers.SerializerMethodField("get_company_user_role_id")
+    company_user_id = serializers.SerializerMethodField("get_company_user_id")
+    company_area_id = serializers.SerializerMethodField("get_company_area_id")
+    is_highest_priority = serializers.SerializerMethodField("get_is_highest_priority")
+
+    def get_is_highest_priority(self, data):
+        user = User.objects.get(id=data["user_id"])
+        if not CompanyUserRole.objects.filter(user_name=user).exists():
+            return None
+        company_user_role_instance = CompanyUserRole.objects.get(user_name=user)
+        return company_user_role_instance.role_name.is_highest_priority
+
+    def get_role(self, data):
+        user = User.objects.get(id=data["user_id"])
+        if not CompanyUserRole.objects.filter(user_name=user).exists():
+            return None
+        company_user_role_instance = CompanyUserRole.objects.get(user_name=user)
+        return company_user_role_instance.role_name.role_name.role_name
+
+    def get_company_id(self, data):
+        user = User.objects.get(id=data["user_id"])
+        if not CompanyUser.objects.filter(user_name=user).exists():
+            return None
+        company_user_instance = CompanyUser.objects.get(user_name=user)
+        return company_user_instance.company_name.company_id
+
+    def get_division_name(self, data):
+        user = User.objects.get(id=data["user_id"])
+        if not CompanyUserRole.objects.filter(user_name=user).exists():
+            return None
+        instance = CompanyUserRole.objects.get(user_name=user)
+        if instance.division_name:
+            return instance.division_name.id
+        else:
+            return None
+
+    def get_company_user_role_id(self, data):
+        user = User.objects.get(id=data["user_id"])
+        if not CompanyUserRole.objects.filter(user_name=user).exists():
+            return None
+        instance = CompanyUserRole.objects.get(user_name=user)
+        return instance.id
+
+    def get_company_user_id(self, data):
+        user = User.objects.get(id=data["user_id"])
+        if not CompanyUser.objects.filter(user_name=user).exists():
+            return None
+        company_user_instance = CompanyUser.objects.get(user_name=user)
+        return company_user_instance.id
+
+    def get_company_area_id(self, data):
+        user = User.objects.get(id=data["user_id"])
+        company_user_role = CompanyUserRole.objects.get(user_name=user)
+        if not company_user_role.company_area:
+            return None
+        return company_user_role.company_area.id
+
+    class Meta:
+        model = User
+        fields = [
+            "user_id",
+            "role",
+            "company_id",
+            "division_name",
+            "company_user_role_id",
+            "company_user_id",
+            "company_area_id",
+            "is_highest_priority",
+        ]
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
