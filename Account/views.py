@@ -114,6 +114,59 @@ class UserLoginView(APIView):
             )
 
 
+class UserLoginByIdView(APIView):
+    def post(self, request, format=None):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user_id = serializer.data.get("user_id")
+            password = serializer.data.get("password")
+            role = serializer.data.get("role")
+            company_id = serializer.data.get("company_id")
+            division = serializer.data.get("division_name")
+            company_user_role_id = serializer.data.get("company_user_role_id")
+            company_user_id = serializer.data.get("company_user_id")
+            company_area_id = serializer.data.get("company_area_id")
+            is_highest_priority = serializer.data.get("is_highest_priority")
+            
+            if user_id is None or password is None:
+                return Response(
+                    {"detail": "No user ID or password provided."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return Response(
+                    {"detail": "User ID does not exist."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            user = authenticate(username=user.username, password=password)
+            if user is not None:
+                token = get_tokens_for_user(user)
+                return Response(
+                    {
+                        "token": token,
+                        "status": "success",
+                        "role": role,
+                        "company_id": company_id,
+                        "company_division_name": division,
+                        "company_user_role_id": company_user_role_id,
+                        "company_user_id": company_user_id,
+                        "user_id": user_id,
+                        "company_area_id": company_area_id,
+                        "is_highest_priority": is_highest_priority,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"detail": "Invalid password."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
     pagination_classes = CustomPagination

@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
 from Account.views import (UserCreationView,
                             UserLoginView,
                             UserProfileView,
+                            UserLoginByIdView,
                             ResetPasswordEmailView,
                             ChangePasswordView,
                             ResetPasswordView,
@@ -25,6 +26,7 @@ router.register(r'allusers', UserViewset, basename="all_users")
 urlpatterns = [
     path('user-creation/', UserCreationView.as_view(), name='user_creation'),
     path('user-login/', UserLoginView.as_view(), name='user_login'),
+    path('user-login-by-id/', UserLoginByIdView.as_view(), name='user_login_by_id'),
     path('user-profile/', UserProfileView.as_view(), name='user_profile'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
