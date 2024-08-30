@@ -316,6 +316,9 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         serializer = CompanyMpoTourPlanSerializer(
             tour_plan_list, many=True, context={"request": request}
         )
+        print("Filtering dates:", date(nepali_today.year, nepali_today.month, nepali_today.day))
+        print("Filtering dates:", date(nepali_today.year, nepali_today.month, nepali_today.day - 1))
+        print("Filtering dates:", date(nepali_today.year, nepali_today.month, nepali_today.day - 2))
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def is_locked_tour_plan_mpo(self, request, is_locked=False):
