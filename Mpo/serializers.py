@@ -222,7 +222,10 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
-        if TourPlan.objects.filter(select_the_date_id=tour_plan_data['select_the_date_id']).exists():
+        if CompanyMpoTourPlan.objects.filter(
+            tour_plan__tour_plan__select_the_date_id=tour_plan_data['select_the_date_id'],
+            mpo_name=validated_data.get('mpo_name')).exists():
+            print("tour plan here")
             raise HttpResponseBadRequest("Tour plan already exists!!!!")
         tour_plan_instance = TourPlan(
             select_the_month=tour_plan_data['select_the_month'],
@@ -260,7 +263,6 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
                 tour_plan__tour_plan__select_the_date_id=company_mpo_tour_plan.tour_plan.tour_plan.select_the_date_id
             ).delete()
         company_mpo_tour_plan.save()
-        print(company_mpo_tour_plan)
         return company_mpo_tour_plan
     
     def update(self, instance, validated_data):
