@@ -287,6 +287,7 @@ def get_lower_level_instances(company_user_instance, instance_dict):
     if company_user_instance[0].role_name.priority_value == 0:
         print("mpo data")
         instance_dict["mpo"] = [company_user_instance]
+        print(instance_dict)
         return instance_dict
     else:
         if instance_dict.get("other_roles"):
