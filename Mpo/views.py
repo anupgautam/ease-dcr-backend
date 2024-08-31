@@ -1,23 +1,24 @@
-from Chemist.models import CompanyWiseChemist
-from Company.models import CompanyRolesTPLock
-from DCRUser.models import CompanyUserRole
-from DCRUser.serializers import CompanyUserRoleSerializers
-from Doctors.models import CompanyWiseDoctor
-from rest_framework import viewsets
+from datetime import date, datetime, timedelta
+
 from django.db.models import Q
-from rest_framework.response import Response
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from datetime import datetime, timedelta
-from rest_framework import status
 from django.http import JsonResponse
-from datetime import date
-from rest_framework.decorators import action, permission_classes, api_view
 
 # from query_counter.decorators import queries_counter
 from django_filters.rest_framework import DjangoFilterBackend
+from nepali_date_converter import nepali_today
+from rest_framework import status, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+
 from Account.pagination import CustomPagination
+from Chemist.models import CompanyWiseChemist
+from Company.models import CompanyRolesTPLock
+from dailycallrecord.utils import nepali_month_to_digit
+from DCRUser.models import CompanyUserRole
+from DCRUser.serializers import CompanyUserRoleSerializers
+from Doctors.models import CompanyWiseDoctor
 
 # from Mpo.serializers import *
 from Mpo.models import (
@@ -40,27 +41,17 @@ from Mpo.serializers import (
     ShiftWiseTourplanSerializer,
     TourplanSerializer,
 )
-from dailycallrecord.utils import nepali_month_to_digit
-from .utils import tourplan_notification_send
-from Company.serializers import CompanySerializers
 from Mpo.utils import (
-    mpo_data_transmission,
     mpo_update_data_transmission,
-    get_upper_level_user_id,
-    get_user_id,
-    get_user_name,
-    general_notification_send,
 )
+
+from .backends import CaseInsensitiveDjangoFilterBackend
 from .utils import (
     datetime_string,
     get_next_month,
     get_next_month_date,
     get_year_month_from_date,
 )
-from .backends import CaseInsensitiveDjangoFilterBackend
-from nepali_date_converter import nepali_today
-from query_counter.decorators import queries_counter
-from django.utils.decorators import method_decorator
 
 
 class ShiftViewset(viewsets.ModelViewSet):
@@ -178,7 +169,7 @@ class ShiftWiseTourplanViewset(viewsets.ModelViewSet):
 
 class CompanyMPOAreaViewset(viewsets.ModelViewSet):
     model = CompanyMPOArea
-    queryset = CompanyMPOArea.objects.all()
+    queryset = CompanyMPOArea.objects.exclude(mpo_name__user_name__is_active=False)
     serializer_class = CompanyMPOAreaSerializers
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["id", "company_name", "mpo_name", "company_area"]
@@ -273,15 +264,17 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by("tour_plan__tour_plan__select_the_date_id")
+        return queryset.exclude(mpo_name__user_name__is_active=False).order_by(
+            "tour_plan__tour_plan__select_the_date_id"
+        )
 
     @action(detail=False, methods=["GET"])
     def get_tour_plan_mpo(self, request):
         company_user_role = CompanyUserRole.objects.get(id=request.GET.get("mpo_name"))
         if company_user_role.is_tp_locked:
             return Response(
-                data={"status": "Your user has been locked"},
-                      status=status.HTTP_200_OK)
+                data={"status": "Your user has been locked"}, status=status.HTTP_200_OK
+            )
 
         if self.is_locked_tour_plan_mpo(request):
             company_user_role.is_tp_locked = True
@@ -289,16 +282,14 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             self.is_locked_tour_plan_mpo(is_locked=True)
 
             return Response(
-                data={"status": "Your user has been locked"},
-                      status=status.HTTP_200_OK)
-        
+                data={"status": "Your user has been locked"}, status=status.HTTP_200_OK
+            )
+
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             (
                 Q(
                     tour_plan__tour_plan__select_the_date_id__in=[
-                        date(
-                            nepali_today.year, nepali_today.month, nepali_today.day 
-                        ),
+                        date(nepali_today.year, nepali_today.month, nepali_today.day),
                         date(
                             nepali_today.year, nepali_today.month, nepali_today.day - 1
                         ),
@@ -311,30 +302,25 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             ),
             mpo_name=request.GET.get("mpo_name"),
             is_approved=True,
-            is_locked=False
+            is_locked=False,
         )
         serializer = CompanyMpoTourPlanSerializer(
             tour_plan_list, many=True, context={"request": request}
         )
-        print("Filtering dates:", date(nepali_today.year, nepali_today.month, nepali_today.day))
-        print("Filtering dates:", date(nepali_today.year, nepali_today.month, nepali_today.day - 1))
-        print("Filtering dates:", date(nepali_today.year, nepali_today.month, nepali_today.day - 2))
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def is_locked_tour_plan_mpo(self, request, is_locked=False):
-        print("hello",type(CompanyUserRole.objects.get(
-            id=request.GET.get("mpo_name")
-        ).role_name))
         company_lock_day = CompanyRolesTPLock.objects.get(
             company_roles=CompanyUserRole.objects.get(
-            id=request.GET.get("mpo_name")
-        ).role_name).tp_lock_days
-        latest_date_list = [date(nepali_today.year, nepali_today.month, nepali_today.day - day)
-                            for day in range(1, company_lock_day+1)]
+                id=request.GET.get("mpo_name")
+            ).role_name
+        ).tp_lock_days
+        latest_date_list = [
+            date(nepali_today.year, nepali_today.month, nepali_today.day - day)
+            for day in range(1, company_lock_day + 1)
+        ]
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
-            ~Q(
-                tour_plan__tour_plan__select_the_date_id__in=latest_date_list
-            ),
+            ~Q(tour_plan__tour_plan__select_the_date_id__in=latest_date_list),
             (
                 Q(tour_plan__tour_plan__is_dcr_added=False)
                 | Q(tour_plan__tour_plan__is_doctor_dcr_added=False)
@@ -352,10 +338,6 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
             tour_plan_list.update(is_locked=True)
             return {}
         return len(tour_plan_list) == company_lock_day
-        # serializer = CompanyMpoTourPlanSerializer(
-        #     tour_plan_list, many=True, context={"request": request}
-        # )
-        # return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         # data = mpo_data_transmission(request)

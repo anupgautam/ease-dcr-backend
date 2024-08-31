@@ -170,7 +170,7 @@ class TargetViewset(viewsets.ModelViewSet):
             
 
 class UploadsViewset(viewsets.ModelViewSet):
-    queryset = Uploads.objects.all()
+    queryset = Uploads.objects.exclude(mpo_name__user_name__is_active=False)
     serializer_class = UploadsSerializer
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
@@ -182,7 +182,6 @@ class UploadsViewset(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         else:
-            print(serializer.errors)
             return Response(serializer.errors)
         
     def update(self, request, *args, **kwargs):
@@ -544,7 +543,7 @@ def get_company_sales(request):
 
 class ExpensesViewset(viewsets.ModelViewSet):
     model = ExpenseData
-    queryset = ExpenseData.objects.all()
+    queryset = ExpenseData.objects.exclude(user_id__user_name__is_active=False)
     pagination_class = CustomPagination
     serializer_class = ExpensesSerializer
     filter_backends = [DjangoFilterBackend]

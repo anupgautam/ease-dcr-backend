@@ -111,7 +111,7 @@ class CompanyWiseChemistViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('chemist_name__chemist_name')
+        return queryset.order_by('chemist_name__chemist_name').exclude(mpo_name__user_name__is_active=False)
     
     @action(detail=False, methods=['post'])
     def search_chemist(self, request, *args, **kwargs):

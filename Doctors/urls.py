@@ -9,12 +9,7 @@ urlpatterns = [
 ]
 router = DefaultRouter()
 router.register(r'doctor', DoctorViewset)
-# router.register(r'doctor-category', DoctorCategoryViewset)
 router.register(r'company-wise-doctor-specialization', CompanyDoctorSpecializationViewset)
-# router.register(r'company-wise-doctor-area', CompanyWorkingAreaViewset)
-# router.register(r'doctor-working-area', DoctorWorkingAreaViewset)
-# router.register(r'company-category-wise-doctor', CategoryWiseDoctorViewset)
-# router.register(r'company-area-wise-doctor', AreaWiseDoctorViewset)
 router.register(r'company-wise-doctor', CompanyWiseDoctorViewset,
                 basename='company-wise-doctor')
 router.register(r'company-wise-doctor-without-pagination', 

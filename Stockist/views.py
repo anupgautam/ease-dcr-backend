@@ -75,7 +75,7 @@ class CompanyStockistViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('stockist_name__stockist_name')
+        return queryset.order_by('stockist_name__stockist_name').exclude(mpo_name__user_name__is_active=False)
 
     @action(detail=False, methods=['post'])
     def create_stockist(self, request, *args, **kwargs):

@@ -232,7 +232,7 @@ class MpoWiseShiftWiseDcrForDoctorViewset(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('dcr__dcr__date')
+        return queryset.order_by('dcr__dcr__date').exclude(mpo_name__user_name__is_active=False)
 
     def create(self, request, *args, **kwargs):
         data = dcr_for_doctor_data_transmission(request)
@@ -646,7 +646,7 @@ class MpoWiseShiftWiseDcrForChemistViewset(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('dcr__dcr__date')
+        return queryset.order_by('dcr__dcr__date').exclude(mpo_name__user_name__is_active=False)
 
     def create(self, request, *args, **kwargs):
         data = dcr_for_chemist_data_transmission(request)
@@ -931,7 +931,7 @@ class MpoWiseShiftWiseDcrForStockistViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('dcr__dcr__date')
+        return queryset.order_by('dcr__dcr__date').exclude(mpo_name__user_name__is_active=False)
 
     def create(self, request, *args, **kwargs):
         data = dcr_for_stockist_data_transmission(request)

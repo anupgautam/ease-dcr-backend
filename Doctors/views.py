@@ -155,10 +155,10 @@ class CompanyWiseDoctorViewset(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'company_name', 'doctor_name__doctor_territory', 'mpo_name']
     permission_classes = [IsAuthenticated]
-
+    
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by('doctor_name__doctor_name')
+        return queryset.order_by('doctor_name__doctor_name').exclude(mpo_name__user_name__is_active=False)
 
     @action(detail=False, methods=['post'])
     def search_doctor(self, request, *args, **kwargs):

@@ -173,7 +173,7 @@ class HigherOrderTourplanViewsetWithPagination(viewsets.ModelViewSet):
     
 
 class HigherOrderDcrWithPagination(viewsets.ModelViewSet):
-    queryset = HigherOrderDCR.objects.all()
+    queryset = HigherOrderDCR.objects.exclude(user_id__user_name__is_active=False)
     serializer_class = HigherOrderDcrSerializer
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
