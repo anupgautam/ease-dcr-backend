@@ -225,8 +225,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
         if CompanyMpoTourPlan.objects.filter(
             tour_plan__tour_plan__select_the_date_id=tour_plan_data['select_the_date_id'],
             mpo_name=validated_data.get('mpo_name')).exists():
-            print("tour plan here")
-            raise HttpResponseBadRequest("Tour plan already exists!!!!")
+            raise serializers.ValidationError("Tour plan cant be multiple for same date")
         tour_plan_instance = TourPlan(
             select_the_month=tour_plan_data['select_the_month'],
             select_the_date_id=tour_plan_data['select_the_date_id'],
