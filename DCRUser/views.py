@@ -283,6 +283,7 @@ def get_lower_level_instances(company_user_instance, instance_dict):
     if len(company_user_instance) == 0:
         print("no data")
         return instance_dict
+    print(company_user_instance)
     if company_user_instance[0].role_name.priority_value == 0:
         print("mpo data")
         instance_dict["mpo"] = [company_user_instance]
