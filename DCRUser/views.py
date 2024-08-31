@@ -331,7 +331,9 @@ def get_all_the_lower_level_users_from_company_user_role_id(request):
         return JsonResponse(
             data, status=200, headers={"content_type": "application/json"}, safe=False
         )
+    print(data)
     user_list = list(chain.from_iterable(data.values()))
+    print(user_list)
     if len(user_list) == 2:
         queryset = list(chain(user_list[0], user_list[1]))
     else:
