@@ -109,7 +109,7 @@ class CompanyUserRoleViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by("user_name__first_name")
+        return queryset.exclude(role_name__role_name__role_name__in=['Admin', 'admin', 'ADMIN']).order_by("user_name__first_name")
 
     @action(detail=False, methods=["post"])
     @permission_classes(
