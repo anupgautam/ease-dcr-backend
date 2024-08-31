@@ -338,7 +338,7 @@ def get_all_the_lower_level_users_from_company_user_role_id(request):
     #     queryset = list(chain(user_list[0], user_list[1]))
     # else:
     #     queryset = user_list[0]
-    serializer = CompanyUserRoleSerializers(queryset, many=True)
+    serializer = CompanyUserRoleSerializers(user_list, many=True)
     return JsonResponse(
         serializer.data,
         status=200,
