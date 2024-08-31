@@ -222,6 +222,8 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
+        if TourPlan.objects.filter(select_the_date_id=tour_plan_data['select_the_date_id']).exists():
+            raise HttpResponseBadRequest("Tour plan already exists!!!!")
         tour_plan_instance = TourPlan(
             select_the_month=tour_plan_data['select_the_month'],
             select_the_date_id=tour_plan_data['select_the_date_id'],
