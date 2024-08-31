@@ -9,11 +9,6 @@ from django.db.models import Q
 from Mpo.models import CompanyMpoTourPlan
 from rest_framework import serializers
 
-from DCRUser.models import (
-    User,
-    CompanyUser,
-    CompanyUserRole,
-)
 from Company.serializers import (
     CompanyAreaSerializers,
     CompanySerializers,
@@ -22,6 +17,11 @@ from Company.serializers import (
 from Company.models import Company, Roles
 from DCRUser.models import *
 from Account.serializers import *
+from DCRUser.models import (
+    User,
+    CompanyUser,
+    CompanyUserRole,
+)
 from Company.serializers import CompanyRolesSerializers, CompanyWiseDivisionSerializers
 from DCRUser.utils import month_number_to_name
 
@@ -170,7 +170,7 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             executive_level = instance.get("executive_level")
             division_name = instance.get("division_name")
         else:
-            print(instance.__dict__)
+            print(instance.id)
             company_name = instance.company_name
             role_name = instance.role_name
             company_area = instance.company_area
