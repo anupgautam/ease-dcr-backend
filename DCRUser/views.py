@@ -334,15 +334,15 @@ def get_all_the_lower_level_users_from_company_user_role_id(request):
     print(data)
     user_list = list(chain.from_iterable(data.values()))
     print(user_list)
-    combined_objects = []
-    for queryset in user_list:
-        combined_objects.extend(list(user_list))
+    # combined_objects = []
+    # for queryset in user_list:
+    #     combined_objects.extend(list(user_list))
 
-    # if len(user_list) == 2:
-    #     queryset = list(chain(user_list[0], user_list[1]))
-    # else:
-    #     queryset = user_list[0]
-    serializer = CompanyUserRoleSerializers(combined_objects, many=True)
+    if len(user_list) >= 1:
+        queryset = list(chain(*user_list))
+    else:
+        queryset = user_list[0]
+    serializer = CompanyUserRoleSerializers(queryset, many=True)
     return JsonResponse(
         serializer.data,
         status=200,
