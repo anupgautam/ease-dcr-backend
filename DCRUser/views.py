@@ -1,31 +1,23 @@
 from itertools import chain
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import action, permission_classes
-from django.contrib.postgres.search import TrigramSimilarity
-from django.db.models.functions import Greatest
-from django.db.models import Q
-from django.http import JsonResponse
-import jwt
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
 
-from Company.models import Company
-from DCRUser.logic import generate_random_password
-from DCR.settings import SECRET_KEY
-from DCRUser.models import (
-    User,
-    CompanyUser,
-    CompanyUserRole,
-)
-from DCRUser.serializers import *
-from Account.serializers import UserCreationSerializer
+from django.contrib.postgres.search import TrigramSimilarity
+from django.db.models import Q
+from django.db.models.functions import Greatest
+from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from Account.pagination import CustomPagination
 from Company.models import *
-from DCRUser.logic import get_user_from_access
+from DCRUser.models import (
+    CompanyUser,
+    CompanyUserRole,
+    User,
+)
+from DCRUser.serializers import *
 from DCRUser.utils import company_user_data_transmission
 
 
@@ -56,6 +48,7 @@ class CompanyUserViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.order_by("user_name__first_name")
+
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.exclude(role_name__role_name__role_name="admin")
@@ -70,7 +63,6 @@ class CompanyUserWithoutPagination(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.order_by("user_name__first_name")
-    
 
 
 class CompanyUserRoleViewsetWithoutPagination(viewsets.ModelViewSet):
@@ -87,10 +79,9 @@ class CompanyUserRoleViewsetWithoutPagination(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by("user_name__first_name")
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.exclude(role_name__role_name__role_name="admin")
+        return queryset.order_by("user_name__first_name").exclude(
+            role_name__role_name__role_name="admin", user_name__is_active=False
+        )
 
 
 class CompanyUserRoleViewset(viewsets.ModelViewSet):
@@ -109,7 +100,9 @@ class CompanyUserRoleViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.exclude(role_name__role_name__role_name__in=['Admin', 'admin', 'ADMIN']).order_by("user_name__first_name")
+        return queryset.exclude(
+            role_name__role_name__role_name__in=["Admin", "admin", "ADMIN"]
+        ).order_by("user_name__first_name")
 
     @action(detail=False, methods=["post"])
     @permission_classes(
@@ -364,7 +357,7 @@ def get_higher_level_instances(user_id, data):
 @api_view(["POST"])
 def get_all_the_upper_level_users_from_company_user_role_id(request):
     print("hamro request")
-    print("id ho hai",request.data.get('id'))
+    print("id ho hai", request.data.get("id"))
     user_dict = {}
     user_id = request.data.get("id")
     data = []
