@@ -170,7 +170,7 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             executive_level = instance.get("executive_level")
             division_name = instance.get("division_name")
         else:
-            print(instance)
+            print(instance.__dict__)
             company_name = instance.company_name
             role_name = instance.role_name
             company_area = instance.company_area
