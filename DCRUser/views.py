@@ -317,6 +317,7 @@ def get_all_the_lower_level_users_from_company_user_role_id(request):
             if CompanyUserRole.objects.filter(
                 executive_level=company_user_instance.id
             ).exists():
+                print("executive level")
                 lower_level_instances = CompanyUserRole.objects.filter(
                     executive_level=company_user_instance.id
                 )
