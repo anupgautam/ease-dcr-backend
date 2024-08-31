@@ -298,6 +298,7 @@ def get_lower_level_instances(company_user_instance, instance_dict):
         lower_level_instance = CompanyUserRole.objects.filter(
             executive_level__in=company_user_list
         )
+        print("role graph test", instance_dict)
         return get_lower_level_instances(lower_level_instance, instance_dict)
 
 
