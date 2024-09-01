@@ -142,7 +142,7 @@ DATABASES = {
         "NAME": "dcr",
         "USER": "postgres",
         "HOST": "localhost",
-        "PASSWORD": "password",
+        "PASSWORD": "postgres",
         "PORT": "5432",
     }
 }
