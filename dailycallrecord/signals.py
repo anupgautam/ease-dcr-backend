@@ -80,7 +80,8 @@ def create_or_update_target(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=DcrForStockistOrderedProduct)
 def create_sales_data(sender, instance, created, **kwargs):
-    target = Target.objects.get(target_to=instance.dcr_id.visited_area.mpo_name)
+    mpo_name = MpoWiseShiftwiseDcrForStockist.objects.get(dcr__dcr=instance.produdct_id.dcr_id)
+    target = Target.objects.get(target_to=mpo_name)
     if created:
         stockist_price = instance.ordered_product.ordered_product.product_name.product_price_for_stockist * instance.ordered_product.ordered_quantity
         target.sales += stockist_price
@@ -89,7 +90,8 @@ def create_sales_data(sender, instance, created, **kwargs):
 
 @receiver(pre_delete, sender=DcrForStockistOrderedProduct)
 def delete_sales_data(sender, instance, **kwargs):
-        target = Target.objects.get(target_to=instance.dcr_id.visited_area.mpo_name)
+        mpo_name = MpoWiseShiftwiseDcrForStockist.objects.get(dcr__dcr=instance.produdct_id.dcr_id)
+        target = Target.objects.get(target_to=mpo_name)
         stockist_price = instance.ordered_product.ordered_product.product_name.product_price_for_stockist * instance.ordered_product.ordered_quantity
         target.sales -= stockist_price
         target.save()
@@ -97,7 +99,8 @@ def delete_sales_data(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ChemistOrderedProductInformationMap)
 def create_sales_data_chemist(sender, instance, created, **kwargs):
-    target = Target.objects.get(target_to=instance.product_id.dcr_id.visited_area.mpo_name)
+    mpo_name = MpoWiseShiftwiseDcrForChemist.objects.get(dcr__dcr=instance.produdct_id.dcr_id)
+    target = Target.objects.get(target_to=mpo_name)
     if created:
         chemist_price = instance.information_id.ordered_quantity * instance.product_id.ordered_product.product.product_price_per_strip_in_mrp
         target.sales += chemist_price
@@ -106,7 +109,8 @@ def create_sales_data_chemist(sender, instance, created, **kwargs):
 
 @receiver(pre_delete, sender=ChemistOrderedProductInformationMap)
 def delete_sales_data_chemist(sender, instance, **kwargs):
-        target = Target.objects.get(target_to=instance.product_id.dcr_id.visited_area.mpo_name)
+        mpo_name = MpoWiseShiftwiseDcrForChemist.objects.get(dcr__dcr=instance.produdct_id.dcr_id)
+        target = Target.objects.get(target_to=mpo_name)
         chemist_price = instance.information_id.ordered_quantity * instance.product_id.ordered_product.product.product_price_per_strip_in_mrp
         target.sales -= chemist_price
         target.save()
