@@ -6,6 +6,7 @@ from dailycallrecord.models import (
     MpoWiseShiftwiseDcrForStockist,
     MpoWiseShiftwiseDcrForDoctor,
     DcrForChemist,
+    DcrForChemistProduct,
     StockistOrderedProduct,
     DcrForStockistOrderedProduct,
     ChemistOrderedProductInformationMap,
@@ -99,25 +100,24 @@ def delete_sales_data(sender, instance, **kwargs):
         target.save()
 
 
-@receiver(post_save, sender=ChemistOrderedProductInformationMap)
+@receiver(post_save, sender=MpoWiseShiftwiseDcrForChemist)
 def create_sales_data_chemist(sender, instance, created, **kwargs):
-    print("here")
-    print(instance.product_id)
-    print(instance.product_id.dcr_id)
-    print("to here")
-    mpo_name = MpoWiseShiftwiseDcrForChemist.objects.get(dcr__dcr=instance.product_id.dcr_id)
-    target = Target.objects.get(target_to=mpo_name)
+    target = Target.objects.get(target_to=instance.mpo_name)
     if created:
-        chemist_price = instance.information_id.ordered_quantity * instance.product_id.ordered_product.product.product_price_per_strip_in_mrp
+        dcr_for_chemist = instance.dcr.dcr
+        dcr_for_chemist_product = DcrForChemistProduct.objects.get(dcr_id=dcr_for_chemist)
+        dcr_chemist_map = ChemistOrderedProductInformationMap.objects.get(product_id=dcr_for_chemist_product)
+        chemist_price = dcr_chemist_map.information_id.ordered_quantity * dcr_chemist_map.product_id.ordered_product.product.product_price_per_strip_in_mrp
         target.sales += chemist_price
         target.save()
 
 
 @receiver(pre_delete, sender=ChemistOrderedProductInformationMap)
 def delete_sales_data_chemist(sender, instance, **kwargs):
-        mpo_name = MpoWiseShiftwiseDcrForChemist.objects.get(dcr__dcr=instance.product_id.dcr_id)
-        target = Target.objects.get(target_to=mpo_name)
-        chemist_price = instance.information_id.ordered_quantity * instance.product_id.ordered_product.product.product_price_per_strip_in_mrp
+        target = Target.objects.get(target_to=instance.mpo_name)
+        dcr_for_chemist_product = DcrForChemistProduct.objects.get(dcr_id=dcr_for_chemist)
+        dcr_chemist_map = ChemistOrderedProductInformationMap.objects.get(product_id=dcr_for_chemist_product)
+        chemist_price = dcr_chemist_map.information_id.ordered_quantity * dcr_chemist_map.product_id.ordered_product.product.product_price_per_strip_in_mrp
         target.sales -= chemist_price
         target.save()
 
