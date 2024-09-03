@@ -101,6 +101,10 @@ def delete_sales_data(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ChemistOrderedProductInformationMap)
 def create_sales_data_chemist(sender, instance, created, **kwargs):
+    print("here")
+    print(instance.product_id)
+    print(instance.product_id.dcr_id)
+    print("to here")
     mpo_name = MpoWiseShiftwiseDcrForChemist.objects.get(dcr__dcr=instance.product_id.dcr_id)
     target = Target.objects.get(target_to=mpo_name)
     if created:
