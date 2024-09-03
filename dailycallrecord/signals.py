@@ -12,6 +12,7 @@ from dailycallrecord.models import (
     ChemistOrderedProductInformationMap,
     MpoWiseShiftwiseDcrForChemist)
 from Expenses.models import Target
+from decimal import Decimal
 
 
 @receiver(post_save, sender=MpoWiseShiftwiseDcrForDoctor)
@@ -87,7 +88,7 @@ def create_sales_data(sender, instance, created, **kwargs):
         dcr_stockist_ordered_product = DcrForStockistOrderedProduct.objects.filter(dcr_id=dcr_for_stockist)
         for dcr_stockist in dcr_stockist_ordered_product:
             stockist_price = dcr_stockist.ordered_product.ordered_product.product_name.product_price_for_stockist * dcr_stockist.ordered_product.ordered_quantity
-            target.sales += stockist_price
+            target.sales += Decimal(stockist_price)
         target.save()
 
 
@@ -98,7 +99,7 @@ def delete_sales_data(sender, instance, **kwargs):
         dcr_stockist_ordered_product = DcrForStockistOrderedProduct.objects.get(dcr_id=dcr_for_stockist)
         for dcr_stockist in dcr_stockist_ordered_product:
             stockist_price = dcr_stockist.ordered_product.ordered_product.product_name.product_price_for_stockist * dcr_stockist.ordered_product.ordered_quantity
-            target.sales -= stockist_price
+            target.sales -= Decimal(stockist_price)
         target.save()
 
 
@@ -111,7 +112,7 @@ def create_sales_data_chemist(sender, instance, created, **kwargs):
         dcr_chemist_map = ChemistOrderedProductInformationMap.objects.filter(product_id=dcr_for_chemist_product)
         for dcr_chemist in dcr_chemist_map:
             chemist_price = dcr_chemist.information_id.ordered_quantity * dcr_chemist.product_id.ordered_product.product_name.product_price_per_strip_in_mrp
-            target.sales += chemist_price
+            target.sales += Decimal(chemist_price)
         target.save()
 
 
@@ -123,7 +124,7 @@ def delete_sales_data_chemist(sender, instance, **kwargs):
         dcr_chemist_map = ChemistOrderedProductInformationMap.objects.filter(product_id=dcr_for_chemist_product)
         for dcr_chemist in dcr_chemist_map:
             chemist_price = dcr_chemist.information_id.ordered_quantity * dcr_chemist.product_id.ordered_product.product_name.product_price_per_strip_in_mrp
-            target.sales -= chemist_price
+            target.sales -=  Decimal(chemist_price)
         target.save()
 
 
