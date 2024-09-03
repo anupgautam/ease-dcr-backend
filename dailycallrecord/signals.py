@@ -73,7 +73,7 @@ def create_or_update_target(sender, instance, created, **kwargs):
             Target.objects.create(
                 year=instance.dcr.dcr.year,
                 target_to=instance.mpo_name,
-                target_from=CompanyUserRole.objects.get(user_name=instance.mpo_name.executive_level),
+                target_from=CompanyUserRole.objects.get(user_name=instance.mpo_name.executive_level.user_name),
                 target_amount=0.0,
                 sales=0.0
             )
