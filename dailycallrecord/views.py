@@ -538,7 +538,7 @@ class DCRChemistProductRewardsRolesViewset(viewsets.ViewSet):
         else:
             sending_data['visited_chemist'] = None
         if 'visited_area' in sending_data:
-            sending_data['visited_area'] = CompanyArea.objects.get(id=data.get('visited_area')).__dict__
+            sending_data['visited_area'] = CompanyMPOArea.objects.get(id=data.get('visited_area')).__dict__
         else:
             sending_data['visited_area'] = None
         serializer = self.serializer_class(
@@ -571,7 +571,7 @@ class DCRChemistProductRewardsRolesViewset(viewsets.ViewSet):
             else:
                 sending_data['visited_chemist'] = None
             if sending_data['visited_area']:
-                sending_data['visited_area'] = CompanyArea.objects.get(id=data.get('visited_area')).__dict__
+                sending_data['visited_area'] = CompanyMPOArea.objects.get(id=data.get('visited_area')).__dict__
             else:
                 sending_data['visited_area'] = None
             if sending_data['date']:
@@ -750,7 +750,7 @@ class DCRStockistProductRewardsRolesViewset(viewsets.ViewSet):
         if sending_data['visited_area'] is None:
             sending_data['visited_area'] = None
         else:
-            sending_data['visited_area'] = CompanyArea.objects.get(id=data.get('visited_area')).__dict__
+            sending_data['visited_area'] = CompanyMPOArea.objects.get(id=data.get('visited_area')).__dict__
         serializer = self.serializer_class(data=sending_data
                                         )
         if serializer.is_valid():
@@ -771,7 +771,7 @@ class DCRStockistProductRewardsRolesViewset(viewsets.ViewSet):
         else:
             sending_data['visited_stockist'] = None
         if 'visited_area' in sending_data:
-            sending_data['visited_area'] = CompanyArea.objects.get(id=data.get('visited_area')).__dict__
+            sending_data['visited_area'] = CompanyMPOArea.objects.get(id=data.get('visited_area')).__dict__
         else:
             sending_data['visited_area'] = None
         serializer = self.serializer_class(
@@ -803,7 +803,7 @@ class DCRStockistProductRewardsRolesViewset(viewsets.ViewSet):
             else:
                 sending_data['visited_stockist'] = None
             if sending_data.get('visited_area'):
-                sending_data['visited_area'] = CompanyArea.objects.get(id=data.get('visited_area')).__dict__
+                sending_data['visited_area'] = CompanyMPOArea.objects.get(id=data.get('visited_area')).__dict__
             else:
                 sending_data['visited_area'] = None
             if sending_data.get('date'):
