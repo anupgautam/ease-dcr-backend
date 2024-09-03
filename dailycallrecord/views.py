@@ -530,7 +530,6 @@ class DCRChemistProductRewardsRolesViewset(viewsets.ViewSet):
                 status=status.HTTP_404_NOT_FOUND)
  
     def create(self, request):
-        print("hamro data",request.data)
         context = request.data.get('context')
         data = formdata_application_json(request.data)
         sending_data = request.data.copy()
