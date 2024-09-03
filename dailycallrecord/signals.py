@@ -69,7 +69,7 @@ def save_attendance_stockist(sender, instance, created, **kwargs):
 @receiver(post_save, sender=MpoWiseShiftwiseDcrForChemist)
 def create_or_update_target(sender, instance, created, **kwargs):
     if created:
-        if not Target.objects.filter(target_to=instance.visited_area.mpo_name).exists():
+        if not Target.objects.filter(target_to=instance.mpo_name).exists():
             Target.objects.create(
                 year=instance.year,
                 target_to=instance.visited_area.mpo_name,
