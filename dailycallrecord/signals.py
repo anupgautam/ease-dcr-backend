@@ -8,7 +8,8 @@ from dailycallrecord.models import (
     DcrForChemist,
     StockistOrderedProduct,
     DcrForStockistOrderedProduct,
-    ChemistOrderedProductInformationMap)
+    ChemistOrderedProductInformationMap,
+    MpoWiseShiftwiseDcrForChemist)
 from Expenses.models import Target
 
 
@@ -64,7 +65,7 @@ def save_attendance_stockist(sender, instance, created, **kwargs):
             company_user_attendance.save()
 
 
-@receiver(post_save, sender=DcrForChemist)
+@receiver(post_save, sender=MpoWiseShiftwiseDcrForChemist)
 def create_or_update_target(sender, instance, created, **kwargs):
     if created:
         if not Target.objects.filter(target_to=instance.visited_area.mpo_name).exists():
