@@ -71,9 +71,9 @@ def create_or_update_target(sender, instance, created, **kwargs):
     if created:
         if not Target.objects.filter(target_to=instance.mpo_name).exists():
             Target.objects.create(
-                year=instance.year,
-                target_to=instance.visited_area.mpo_name,
-                target_from=CompanyUserRole.objects.get(user_name=instance.visited_area.mpo_name.executive_level),
+                year=instance.dcr.dcr.year,
+                target_to=instance.mpo_name,
+                target_from=CompanyUserRole.objects.get(user_name=instance.mpo_name.executive_level),
                 target_amount=0.0,
                 sales=0.0
             )
