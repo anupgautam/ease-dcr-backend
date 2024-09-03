@@ -517,7 +517,7 @@ class DCRChemistProductRewardsRolesViewset(viewsets.ViewSet):
         if sending_data['visited_area'] is None:
             sending_data['visited_area'] = None
         else:
-            sending_data['visited_area'] = CompanyArea.objects.get(id=data.get('visited_area')).__dict__
+            sending_data['visited_area'] = CompanyMPOArea.objects.get(id=data.get('visited_area')).__dict__
 
         serializer = self.serializer_class(data=sending_data)
         if serializer.is_valid():
@@ -859,6 +859,7 @@ class DcrForStockistOrderedProductViewset(viewsets.ModelViewSet):
     queryset = DcrForStockistOrderedProduct.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['dcr_id']
+
     def create(self, request, *args, **kwargs):
         data = stockist_ordered_product_information(request)
         serializer = self.serializer_class(data=data)
@@ -867,6 +868,7 @@ class DcrForStockistOrderedProductViewset(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
     def update(self, request, *args, **kwargs):
         instance = DcrForStockistOrderedProduct.objects.get(id=kwargs.get('pk'))
         data = stockist_ordered_product_information(request)
@@ -939,8 +941,8 @@ class MpoWiseShiftWiseDcrForStockistViewset(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         else:
-            print(serializer.errors)
             return Response(serializer.errors)
+            
     def update(self, request, *args, **kwargs):
         # max_quantity = get_maximum_ordered_product()
         mpo_wise_dcr_for_stockist = MpoWiseShiftwiseDcrForStockist.objects.get(
