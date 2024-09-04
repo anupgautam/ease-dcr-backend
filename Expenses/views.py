@@ -117,7 +117,8 @@ class TargetViewset(viewsets.ModelViewSet):
     filterset_fields = ['target_from__id',
                         'target_to__id',
                         'year',
-                        'target_to__role_name']
+                        'target_to__role_name',
+                        'target_from__company_name']
 
     def create(self, request, *args, **kwargs):
         data = target_data(request)

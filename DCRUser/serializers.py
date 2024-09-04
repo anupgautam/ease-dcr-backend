@@ -109,9 +109,9 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             email=user["email"],
             phone_number=user["phone_number"],
             date_of_joining=user["date_of_joining"],
-            is_active=True,
+            is_active=user["is_active"],
         )
-        user_model.set_password("12345")
+        user_model.set_password("12345678")
         user_model.save()
         company_user = CompanyUser.objects.create(
             user_name=user_model, company_name=company_instance
