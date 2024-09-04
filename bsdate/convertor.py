@@ -72,7 +72,8 @@ class BSDateConverter:
         return f"{bs_year}-{bs_month:02d}-{bs_day:02d}"
 
     def convert_bs_to_ad(self, bs_date):
-        bs_year, bs_month, bs_day = map(int, bs_date.split('-'))
+        date = bs_date.strftime('%Y-%m-%d')
+        bs_year, bs_month, bs_day = map(int, date.split('-'))
 
         days_accumulated = sum(self.bs_month_days.get(bs_year, [])[0:bs_month - 1]) + bs_day - 1
         days_since_start = (bs_year - self.bs_start_year) * 365 + days_accumulated

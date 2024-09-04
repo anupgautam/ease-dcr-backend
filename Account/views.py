@@ -60,6 +60,7 @@ class UserLoginView(APIView):
         serializer = UserLoginSerializer(data=request.data)
         if User.objects.filter(email=request.data.get("email")).exists():
             if serializer.is_valid(raise_exception=True):
+                print(serializer.data)
                 email = serializer.data.get("email")
                 password = serializer.data.get("password")
                 role = serializer.data.get("role")
@@ -70,6 +71,7 @@ class UserLoginView(APIView):
                 user_id = serializer.data.get("user_id")
                 company_area_id = serializer.data.get("company_area_id")
                 is_highest_priority = serializer.data.get("is_highest_priority")
+                is_active = serializer.data.get("is_active")
                 if email is None or password is None:
                     return Response(
                         data={"No email or password!!!"},
@@ -86,28 +88,37 @@ class UserLoginView(APIView):
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 user = authenticate(email=email, password=password)
-                if user is not None:
-                    token = get_tokens_for_user(user)
-                    return Response(
-                        data={
-                            "token": token,
-                            "status": "success",
-                            "role": role,
-                            "company_id": company_id,
-                            "company_division_name": division,
-                            "company_user_role_id": company_user_role_id,
-                            "company_user_id": company_user_id,
-                            "user_id": user_id,
-                            "company_area_id": company_area_id,
-                            "is_highest_priority": is_highest_priority,
-                        },
-                        status=status.HTTP_200_OK,
-                    )
+
+                if is_active == True:
+                    if user is not None:
+                        token = get_tokens_for_user(user)
+                        return Response(
+                            data={
+                                "token": token,
+                                "status": "success",
+                                "role": role,
+                                "company_id": company_id,
+                                "company_division_name": division,
+                                "company_user_role_id": company_user_role_id,
+                                "company_user_id": company_user_id,
+                                "user_id": user_id,
+                                "company_area_id": company_area_id,
+                                "is_highest_priority": is_highest_priority,
+                                "is_active": is_active
+                            },
+                            status=status.HTTP_200_OK,
+                        )
+                    else:
+                        return Response(
+                            data={"Email or Password is not valid"},
+                            status=status.HTTP_400_BAD_REQUEST,
+                        )
                 else:
                     return Response(
-                        data={"Email or Password is not valid"},
-                        status=status.HTTP_400_BAD_REQUEST,
+                        data={"Your Status is Inactive Please contact Admin"},
+                        status=status.HTTP_400_BAD_REQUEST
                     )
+
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
