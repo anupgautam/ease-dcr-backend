@@ -189,7 +189,7 @@ class HigherOrderDcrWithPagination(viewsets.ModelViewSet):
 class HigherOrderDcrViewset(viewsets.ModelViewSet):
     queryset = HigherOrderDCR.objects.all()
     serializer_class = HigherOrderDcrSerializer
-    filterset_fields = ['user_id__role_name']
+    filterset_fields = ['user_id__role_name','year','month','date']
 
     def create(self, request, *args, **kwargs):
         data = dcr_data_transmission(request)
