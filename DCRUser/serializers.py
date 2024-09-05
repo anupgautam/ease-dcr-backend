@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 from django.db.models import Q
 
-from Mpo.models import CompanyMpoTourPlan
+from Mpo.models import CompanyMpoTourPlan, CompanyMPOAreaTourPlan
 from rest_framework import serializers
 
 from Company.serializers import (
@@ -170,7 +170,6 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             executive_level = instance.get("executive_level")
             division_name = instance.get("division_name")
         else:
-            print(instance.id)
             company_name = instance.company_name
             role_name = instance.role_name
             company_area = instance.company_area
@@ -186,7 +185,13 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             tour_plan__tour_plan__select_the_month=month_number_to_name[
                 date.today().month
             ],
-        ).count()
+        )
+        tour_plan_area = [tour_plan.tour_plan.tour_plan for tour_plan in tour_plan_list]
+        company_mpo_area = CompanyMPOAreaTourPlan.objects.filter(tour_plan_id__in=tour_plan_area)
+        doctor_number = Doctor.objects.filter(doctor_territory__in=[i.company_mpo_area_id for i in company_mpo_area]).count()
+        chemist_number = Chemist.objects.filter(chemist_territory__in=[i.company_mpo_area_id for i in company_mpo_area]).count()
+        total_pending = doctor_number + chemist_number
+
         tour_plan_dcr_list = CompanyMpoTourPlan.objects.filter(
             Q(mpo_name=instance)
             & Q(
@@ -201,8 +206,13 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
                 | Q(tour_plan__tour_plan__is_doctor_dcr_added=True)
             )
         ).count()
-        response["dcr_pending"] = tour_plan_list - tour_plan_dcr_list
-        response["dcr_feeded"] = tour_plan_dcr_list
+        tour_plan_area_feeded = [tour_plan.tour_plan.tour_plan for tour_plan in tour_plan_dcr_list]
+        company_mpo_area_feeded = CompanyMPOAreaTourPlan.objects.filter(tour_plan_id__in=tour_plan_area)
+        doctor_number_feeded = Doctor.objects.filter(doctor_territory__in=[i.company_mpo_area_id for i in company_mpo_area]).count()
+        chemist_number_feeded = Chemist.objects.filter(chemist_territory__in=[i.company_mpo_area_id for i in company_mpo_area]).count()
+        total_feeded = doctor_number_feeded + chemist_number_feeded
+        response["dcr_pending"] = total_pending - total_feeded
+        response["dcr_feeded"] = total_feeded
         return response
 
 
