@@ -222,10 +222,13 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
-        if CompanyMpoTourPlan.objects.filter(
+
+        if not tour_plan_data['is_unplanned'] and CompanyMpoTourPlan.objects.filter(
             tour_plan__tour_plan__select_the_date_id=tour_plan_data['select_the_date_id'],
-            mpo_name=validated_data.get('mpo_name')).exists():
-            raise serializers.ValidationError("Tour plan cant be multiple for same date")
+            mpo_name=validated_data.get('mpo_name')
+        ).exists():
+            raise serializers.ValidationError("Tour plan can't be multiple for the same date")
+
         tour_plan_instance = TourPlan(
             select_the_month=tour_plan_data['select_the_month'],
             select_the_date_id=tour_plan_data['select_the_date_id'],
@@ -238,30 +241,37 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
             hulting_station=tour_plan_data['hulting_station']
         )
         tour_plan_instance.save()
+
         tour_plan_area_mpo = [
             CompanyMPOAreaTourPlan(
                 tour_plan_id=tour_plan_instance,
-                company_mpo_area_id=area['company_mpo_area_id']) for area in validated_data['mpo_area']]
+                company_mpo_area_id=area['company_mpo_area_id']
+            ) for area in validated_data['mpo_area']
+        ]
         CompanyMPOAreaTourPlan.objects.bulk_create(tour_plan_area_mpo)
+
         shift_instance = Shift.objects.get(id=shift_data['shift'])
         shift_wise_tour_plan_instance = ShiftWiseTourplan(
             tour_plan=tour_plan_instance,
             shift=shift_instance
         )
         shift_wise_tour_plan_instance.save()
-        
-        company_mpo_tour_plan=CompanyMpoTourPlan(
+
+        company_mpo_tour_plan = CompanyMpoTourPlan(
             mpo_name=validated_data.get('mpo_name'),
             tour_plan=shift_wise_tour_plan_instance,
             approved_by=validated_data.get('approved_by'),
-            # submit_to = validated_data.get('submit_to'),
-            company_name = validated_data.get('company_name')
+            company_name=validated_data.get('company_name')
         )
+
         if company_mpo_tour_plan.tour_plan.tour_plan.is_unplanned:
             CompanyMpoTourPlan.objects.filter(
-                tour_plan__tour_plan__select_the_date_id=company_mpo_tour_plan.tour_plan.tour_plan.select_the_date_id
+                tour_plan__tour_plan__select_the_date_id=company_mpo_tour_plan.tour_plan.tour_plan.select_the_date_id,
+                mpo_name=validated_data.get('mpo_name')
             ).delete()
+
         company_mpo_tour_plan.save()
+
         return company_mpo_tour_plan
     
     def update(self, instance, validated_data):

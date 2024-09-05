@@ -27,7 +27,8 @@ def save_attendance_doctor(sender, instance, created, **kwargs):
                 company_name=instance.mpo_name.company_name,
                 user_id=instance.mpo_name,
                 attendance_date=instance.dcr.dcr.date,
-                month=instance.dcr.dcr.month
+                is_present=True,
+                month=instance.dcr.dcr.month,
             )
             company_user_attendance.save()
 
@@ -44,7 +45,8 @@ def save_attendance_chemist(sender, instance, created, **kwargs):
                 company_name=instance.mpo_name.company_name,
                 user_id=instance.mpo_name,
                 attendance_date=instance.dcr.dcr.date,
-                month=instance.dcr.dcr.month
+                month=instance.dcr.dcr.month,
+                is_present=True
             )
             company_user_attendance.save()
 
@@ -62,7 +64,8 @@ def save_attendance_stockist(sender, instance, created, **kwargs):
                 company_name=instance.mpo_name.company_name,
                 user_id=instance.mpo_name,
                 attendance_date=instance.dcr.dcr.date,
-                month=instance.dcr.dcr.month
+                month=instance.dcr.dcr.month,
+                is_present=True
             )
             company_user_attendance.save()
 
