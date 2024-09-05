@@ -145,7 +145,7 @@ class CompanyMPOAreaSerializers(serializers.ModelSerializer):
             'mpo_name__executive_level',
             'mpo_name__company_area',
             'company_area')
-        if instance and instance.pk:
+        if instance.exists():
             instance = queryset.get(pk=instance.pk)
             response = super().to_representation(instance)  
             response['mpo_name'] = CompanyUserRoleSerializers(
