@@ -114,7 +114,7 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
         )
         return JsonResponse(serializer.data, safe=False)
 
-    @action(detail=False, methods=["POST"])
+    @action(detail=False, methods=["GET"])
     def get_tour_plan(self, request):
         company_user_role = CompanyUserRole.objects.get(id=request.GET.get("user_id"))
         if company_user_role.is_tp_locked:
