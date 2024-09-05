@@ -186,7 +186,7 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             mpo_name=instance,
             tour_plan__tour_plan__select_the_month=month_number_to_name[
                 date.today().month
-            ],
+            ]
         )
         tour_plan_area = [tour_plan.tour_plan.tour_plan for tour_plan in tour_plan_list]
         company_mpo_area = CompanyMPOAreaTourPlan.objects.filter(tour_plan_id__in=tour_plan_area)
@@ -207,11 +207,11 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
                 | Q(tour_plan__tour_plan__is_stockist_dcr_added=True)
                 | Q(tour_plan__tour_plan__is_doctor_dcr_added=True)
             )
-        ).count()
+        )
         tour_plan_area_feeded = [tour_plan.tour_plan.tour_plan for tour_plan in tour_plan_dcr_list]
-        company_mpo_area_feeded = CompanyMPOAreaTourPlan.objects.filter(tour_plan_id__in=tour_plan_area)
-        doctor_number_feeded = Doctor.objects.filter(doctor_territory__in=[i.company_mpo_area_id for i in company_mpo_area]).count()
-        chemist_number_feeded = Chemist.objects.filter(chemist_territory__in=[i.company_mpo_area_id for i in company_mpo_area]).count()
+        company_mpo_area_feeded = CompanyMPOAreaTourPlan.objects.filter(tour_plan_id__in=tour_plan_area_feeded)
+        doctor_number_feeded = Doctor.objects.filter(doctor_territory__in=[i.company_mpo_area_id for i in company_mpo_area_feeded]).count()
+        chemist_number_feeded = Chemist.objects.filter(chemist_territory__in=[i.company_mpo_area_id for i in company_mpo_area_feeded]).count()
         total_feeded = doctor_number_feeded + chemist_number_feeded
         response["dcr_pending"] = total_pending - total_feeded
         response["dcr_feeded"] = total_feeded
