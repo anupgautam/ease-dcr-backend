@@ -394,8 +394,6 @@ def get_all_lower_level_users_area(request):
     )
 
 
-
-
 @api_view(["POST"])
 def get_all_the_upper_level_users_from_company_user_role_id(request):
     user_dict = {}
