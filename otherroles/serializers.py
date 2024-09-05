@@ -57,8 +57,8 @@ class HigherOrderTourplanSerializer(serializers.ModelSerializer):
         if HigherOrderTourplan.objects.filter(
             date=validated_data.get('date'),
             user_id=validated_data.get('user_id'),
-            company_id=validated_data.get('company_id')).count()>=2 and not validated_data.get('is_unplanned'):
-            raise serializers.ValidationError("Can't create extra tour plan.")
+            company_id=validated_data.get('company_id')).count()>=1 and not validated_data.get('is_unplanned'):
+            raise serializers.ValidationError("Tour plan can't be multiple for same date.")
         data = validated_data.copy()
         visit_data = data.pop('visit_data')
         if validated_data.get('is_unplanned'):

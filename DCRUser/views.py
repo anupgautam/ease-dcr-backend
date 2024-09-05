@@ -17,6 +17,8 @@ from DCRUser.models import (
     CompanyUserRole,
     User,
 )
+from Mpo.models import CompanyMPOArea
+from MPO.serializers import CompanyMPOAreaSerializers
 from DCRUser.serializers import *
 from DCRUser.utils import company_user_data_transmission
 
@@ -316,7 +318,6 @@ def get_all_the_lower_level_users_from_company_user_role_id(request):
             if CompanyUserRole.objects.filter(
                 executive_level=company_user_instance.id
             ).exists():
-                print("executive level")
                 lower_level_instances = CompanyUserRole.objects.filter(
                     executive_level=company_user_instance.id
                 )
@@ -327,10 +328,6 @@ def get_all_the_lower_level_users_from_company_user_role_id(request):
             data, status=200, headers={"content_type": "application/json"}, safe=False
         )
     user_list = list(chain.from_iterable(data.values()))
-    # combined_objects = []
-    # for queryset in user_list:
-    #     combined_objects.extend(list(user_list))
-
     if len(user_list) >= 1:
         queryset = list(chain(*user_list))
     else:
@@ -357,6 +354,46 @@ def get_higher_level_instances(user_id, data):
             )
             data.append(company_user_role)
             return get_higher_level_instances(company_user_role.id, data)
+
+
+@api_view(["POST"])
+def get_all_lower_level_users_area(request):
+    user_dict = {}
+    user_id = request.data.get("id")
+    data = []
+    if request.data.get("id"):
+        if CompanyUserRole.objects.filter(id=user_id).exists():
+            company_user_role_instance = CompanyUserRole.objects.get(id=user_id)
+            company_user_instance = CompanyUser.objects.get(
+                user_name=company_user_role_instance.user_name.id
+            )
+            if CompanyUserRole.objects.filter(
+                executive_level=company_user_instance.id
+            ).exists():
+                lower_level_instances = CompanyUserRole.objects.filter(
+                    executive_level=company_user_instance.id
+                )
+                data = get_lower_level_instances(lower_level_instances, user_dict)
+
+    if len(data) == 0:
+        return JsonResponse(
+            data, status=200, headers={"content_type": "application/json"}, safe=False
+        )
+    user_list = list(chain.from_iterable(data.values()))
+    mpo_area = [CompanyMPOArea.objects.get(mpo_name=user) for user in user_list]
+    if len(mpo_area) >= 1:
+        queryset = list(chain(*mpo_area))
+    else:
+        queryset = mpo_area[0]
+    serializer = CompanyMPOAreaSerializers(queryset, many=True)
+    return JsonResponse(
+        serializer.data,
+        status=200,
+        headers={"content_type": "application/json"},
+        safe=False,
+    )
+
+
 
 
 @api_view(["POST"])
