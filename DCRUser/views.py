@@ -18,7 +18,7 @@ from DCRUser.models import (
     User,
 )
 from Mpo.models import CompanyMPOArea
-from MPO.serializers import CompanyMPOAreaSerializers
+from Mpo.serializers import CompanyMPOAreaSerializers
 from DCRUser.serializers import *
 from DCRUser.utils import company_user_data_transmission
 
