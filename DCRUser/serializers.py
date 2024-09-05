@@ -186,7 +186,8 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             mpo_name=instance,
             tour_plan__tour_plan__select_the_month=month_number_to_name[
                 date.today().month
-            ]
+            ],
+            is_approved=True
         )
         tour_plan_area = [tour_plan.tour_plan.tour_plan for tour_plan in tour_plan_list]
         company_mpo_area = CompanyMPOAreaTourPlan.objects.filter(tour_plan_id__in=tour_plan_area)
