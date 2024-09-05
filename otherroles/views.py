@@ -16,6 +16,7 @@ from Mpo.utils import (general_notification_send,
                        get_user_id,
                        get_upper_level_user_id,
                        get_user_name)
+from Company.models import CompanyRolesTPLock
 from datetime import date
 from rest_framework.decorators import action, permission_classes, api_view
 from nepali_date_converter import nepali_today
@@ -112,6 +113,20 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['POST'])
     def get_tour_plan(self, request):
+        company_user_role = CompanyUserRole.objects.get(id=request.GET.get("user_id"))
+        if company_user_role.is_tp_locked:
+            return Response(
+                data={"status": "Your user has been locked"}, status=status.HTTP_200_OK
+            )
+
+        if self.is_locked_tour_plan(request):
+            company_user_role.is_tp_locked = True
+            company_user_role.save()
+            self.is_locked_tour_plan_mpo(is_locked=True)
+
+            return Response(
+                data={"status": "Your user has been locked"}, status=status.HTTP_200_OK
+            )
         tour_plan_list = HigherOrderTourplan.objects.filter(
             Q(date__in=[
                 date(nepali_today.year, nepali_today.month, nepali_today.day),
@@ -126,6 +141,31 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
         return Response(
             data=serializer.data,
             status=status.HTTP_200_OK)
+
+    def is_locked_tour_plan(self, request, is_locked=False):
+        company_lock_day = CompanyRolesTPLock.objects.get(
+            company_roles=CompanyUserRole.objects.get(
+                id=request.GET.get("user_id")
+            ).role_name
+        ).tp_lock_days
+        latest_date_list = [
+            date(nepali_today.year, nepali_today.month, nepali_today.day - day)
+            for day in range(1, company_lock_day + 1)
+        ]
+        tour_plan_list = HigherOrderTourplan.objects.filter(
+            ~Q(date__in=latest_date_list),
+            is_dcr_added=False,
+            user_id=request.GET.get("user_id"),
+            is_approved=True,
+            is_admin_opened=False,
+            date__lte=date(
+                nepali_today.year, nepali_today.month, nepali_today.day
+            ),
+        )
+        if is_locked:
+            tour_plan_list.update(is_locked=True)
+            return {}
+        return len(tour_plan_list) == company_lock_day
     
     @action(detail=False, methods=['GET'])
     def get_locked_tour_plan_list(self, request):
