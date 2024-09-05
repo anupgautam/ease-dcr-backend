@@ -110,8 +110,8 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
                                            many=True, context={'request': request})
         return JsonResponse(serializer.data, safe=False)
     
-    @action(detail=False, methods=['POST'])
-    def get_tour_plan(self, request):
+    @action(detail=False, methods=['GET'])
+    def get_tour_plan(self, request, *args, **kwargs):
         tour_plan_list = HigherOrderTourplan.objects.filter(
             Q(date__in=[
                 date(nepali_today.year, nepali_today.month, nepali_today.day),
@@ -119,7 +119,7 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
                 date(nepali_today.year, nepali_today.month, nepali_today.day-2),
                 ]) | Q(
                     is_admin_opened=True),
-                user_id=request.data.get('user_id'),
+                user_id=request.GET.get("user_id"),
                 is_approved=True)
         serializer = HigherOrderTourplanSerializer(
             tour_plan_list, many=True, context={'request': request})
