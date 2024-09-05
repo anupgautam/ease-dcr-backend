@@ -380,13 +380,13 @@ def get_all_lower_level_users_area(request):
             data, status=200, headers={"content_type": "application/json"}, safe=False
         )
     user_list = list(chain.from_iterable(data.values()))
-    print(user_list)
-    mpo_area = [CompanyMPOArea.objects.filter(mpo_name=user) for user in user_list]
-    if len(mpo_area) >= 1:
-        queryset = list(chain(*mpo_area))
+    if len(user_list) >= 1:
+        queryset = list(chain(*user_list))
     else:
-        queryset = mpo_area[0]
-    serializer = CompanyMPOAreaSerializers(queryset, many=True)
+        queryset = user_list[0]
+    mpo_area = [CompanyMPOArea.objects.filter(mpo_name=user) for user in queryset if user.role_name.role_name.role_name in ["MPO", "mpo", "Mpo"]]
+    print(mpo_area)
+    serializer = CompanyMPOAreaSerializers(mpo_area, many=True)
     return JsonResponse(
         serializer.data,
         status=200,
