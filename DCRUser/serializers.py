@@ -22,6 +22,8 @@ from DCRUser.models import (
     CompanyUser,
     CompanyUserRole,
 )
+from Doctors.models import Doctor
+from Chemist.models import Chemist
 from Company.serializers import CompanyRolesSerializers, CompanyWiseDivisionSerializers
 from DCRUser.utils import month_number_to_name
 
