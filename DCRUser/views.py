@@ -385,7 +385,6 @@ def get_all_lower_level_users_area(request):
     else:
         queryset = user_list[0]
     mpo_area = [CompanyMPOArea.objects.filter(mpo_name=user) for user in queryset if user.role_name.role_name.role_name in ["MPO", "mpo", "Mpo"]]
-    print(mpo_area)
     serializer = CompanyMPOAreaSerializers(mpo_area, many=True)
     return JsonResponse(
         serializer.data,
