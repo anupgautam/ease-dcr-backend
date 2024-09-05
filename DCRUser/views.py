@@ -380,6 +380,7 @@ def get_all_lower_level_users_area(request):
             data, status=200, headers={"content_type": "application/json"}, safe=False
         )
     user_list = list(chain.from_iterable(data.values()))
+    print(user_list)
     mpo_area = [CompanyMPOArea.objects.filter(mpo_name=user) for user in user_list]
     if len(mpo_area) >= 1:
         queryset = list(chain(*mpo_area))
