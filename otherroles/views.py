@@ -134,7 +134,7 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
                 date(nepali_today.year, nepali_today.month, nepali_today.day-2),
                 ]) | Q(
                     is_admin_opened=True),
-                user_id=request.data.get('user_id'),
+                user_id=request.GET.get("user_id"),
                 is_approved=True)
         serializer = HigherOrderTourplanSerializer(
             tour_plan_list, many=True, context={'request': request})
@@ -229,7 +229,7 @@ class HigherOrderDcrWithPagination(viewsets.ModelViewSet):
 class HigherOrderDcrViewset(viewsets.ModelViewSet):
     queryset = HigherOrderDCR.objects.all()
     serializer_class = HigherOrderDcrSerializer
-    filterset_fields = ['user_id__role_name']
+    filterset_fields = ['user_id__role_name','year','month','date']
 
     def create(self, request, *args, **kwargs):
         data = dcr_data_transmission(request)
