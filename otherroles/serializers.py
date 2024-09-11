@@ -67,7 +67,7 @@ class HigherOrderTourplanSerializer(serializers.ModelSerializer):
         tour_plan_visit = [
                 HigherOrderTourPlanVisit(
                     visited_with=data.get('visited_with'),
-                    area=data.get('area'),
+                    # area=data.get('area'),
                     high_order_tour_plan_id=instance)
                     for data in validated_data.get('visit_data')
                     ]

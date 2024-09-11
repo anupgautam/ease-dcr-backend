@@ -53,11 +53,11 @@ class HigherOrderTourPlanVisit(models.Model):
                                      on_delete=models.CASCADE,
                                      blank=True,
                                      null=True)
-    area = models.ForeignKey(
-        CompanyMPOArea,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+    # area = models.ForeignKey(
+    #     CompanyMPOArea,
+    #     on_delete=models.CASCADE,
+    #     blank=True,
+    #     null=True)
     high_order_tour_plan_id = models.ForeignKey(
         HigherOrderTourplan,
         on_delete=models.CASCADE,
