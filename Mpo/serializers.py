@@ -231,6 +231,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         shift_data = shift_tour_plan['shift']
         date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        print('date_str',date_str)
         if not tour_plan_data['is_unplanned'] and CompanyMpoTourPlan.objects.filter(
             tour_plan__tour_plan__select_the_date_id=date,
             mpo_name=validated_data.get('mpo_name')
