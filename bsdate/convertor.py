@@ -29,23 +29,21 @@ class BSDateConverter:
         self.bs_start_year = 2080
 
     def convert_ad_to_bs_date(self, ad_date):
+        ad_date = datetime.strptime(ad_date, '%Y-%m-%d')
         days_since_start = (ad_date - self.ad_to_bs_start_date).days
 
         bs_year = self.bs_start_year
-        while days_since_start >= 0:
-            days_in_year = sum(self.bs_month_days[bs_year])
-            if days_since_start < days_in_year:
-                break
-            bs_year += 1
-            days_since_start -= days_in_year
 
-        days_accumulated = 0
-        for month_index, days_in_month in enumerate(self.bs_month_days.get(bs_year, [])):
-            if days_accumulated + days_in_month > days_since_start:
+        while days_since_start >= sum(self.bs_month_days[bs_year]):
+            days_since_start -= sum(self.bs_month_days[bs_year])
+            bs_year += 1
+
+        for month_index, days_in_month in enumerate(self.bs_month_days[bs_year]):
+            if days_since_start < days_in_month:
                 bs_month = month_index + 1
-                bs_day = days_since_start - days_accumulated + 1
+                bs_day = days_since_start + 1
                 break
-            days_accumulated += days_in_month
+            days_since_start -= days_in_month
 
         return f"{bs_year}-{bs_month:02d}-{bs_day:02d}"
 
@@ -54,20 +52,17 @@ class BSDateConverter:
         days_since_start = (ad_date - self.ad_to_bs_start_date).days
 
         bs_year = self.bs_start_year
-        while days_since_start >= 0:
-            days_in_year = sum(self.bs_month_days[bs_year])
-            if days_since_start < days_in_year:
-                break
-            bs_year += 1
-            days_since_start -= days_in_year
 
-        days_accumulated = 0
-        for month_index, days_in_month in enumerate(self.bs_month_days.get(bs_year, [])):
-            if days_accumulated + days_in_month > days_since_start:
+        while days_since_start >= sum(self.bs_month_days[bs_year]):
+            days_since_start -= sum(self.bs_month_days[bs_year])
+            bs_year += 1
+
+        for month_index, days_in_month in enumerate(self.bs_month_days[bs_year]):
+            if days_since_start < days_in_month:
                 bs_month = month_index + 1
-                bs_day = days_since_start - days_accumulated + 1
+                bs_day = days_since_start + 1
                 break
-            days_accumulated += days_in_month
+            days_since_start -= days_in_month
 
         return f"{bs_year}-{bs_month:02d}-{bs_day:02d}"
 
