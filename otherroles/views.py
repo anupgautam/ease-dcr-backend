@@ -17,6 +17,7 @@ from DCRUser.models import CompanyUserRole
 from datetime import date
 from rest_framework.decorators import action
 from nepali_date_converter import nepali_today
+from bsdate.convertor import BSDateConverter
 
 
 class HigherOrderTourplanViewset(viewsets.ModelViewSet):
@@ -51,7 +52,6 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-
             # general_notification_send(
             #     {
             #         'type':"Higher Order Tourplan",
@@ -78,12 +78,11 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
             ).delete()
             tour_plan_visit = [
                 HigherOrderTourPlanVisit(
-                    visited_with=data.get("visited_with"),
-                    area=data.get("area"),
-                    higher_order_tour_plan_id=serializer.data[0].id,
-                )
-                for data in request.data.get("visit_data")
-            ]
+                    visited_with=data.get('visited_with'),
+                    # area=data.get('area'),
+                    higher_order_tour_plan_id=serializer.data[0].id)
+                    for data in request.data.get('visit_data')
+                    ]
             HigherOrderTourPlanVisit.objects.bulk_create(tour_plan_visit)
             # general_notification_send(
             #     {

@@ -2,8 +2,10 @@ from DCRUser.models import CompanyUserRole,CompanyUser, User
 from datetime import datetime
 from dailycallrecord.utils import nepali_month_from_english
 from utility.get_company_id_from_company_user_role import get_company_id_from_company_user_role
+from bsdate.convertor import BSDateConverter
 
 def data_transmission(request):
+    obj = BSDateConverter()
     approved_by = ''
     if request.data.get('approved_by'):
         approved_by=request.data.get('approved_by')
@@ -17,7 +19,8 @@ def data_transmission(request):
     sending_data = []
     dates = request.data.get('dates')
     for date in dates:
-        month_year = datetime.strptime(date,"%Y-%m-%d")
+        new_date = obj.convert_bs_to_ad(date)
+        month_year = datetime.strptime(new_date,"%Y-%m-%d")
         sending_data.append({
         # 'visited_with':{
         # },
@@ -33,7 +36,7 @@ def data_transmission(request):
         # 'shift':{
             'shift':request.data.get('shift'),
         # },
-        'date': date,
+        'date': new_date,
         'year':month_year.year,
         'month': nepali_month_from_english(month_year.strftime("%B")),
         'is_unplanned':is_unplanned,
@@ -43,6 +46,7 @@ def data_transmission(request):
     return sending_data
 
 def update_data_transmission(request):
+    obj = BSDateConverter()
     is_unplanned = False
     if request.data.get('is_unplanned'):
         is_unplanned=request.data.get('is_unplanned')
@@ -56,7 +60,7 @@ def update_data_transmission(request):
         is_approved = is_approved
     else:
         is_approved = False
-    date = request.data.get('date')
+    date = obj.convert_bs_to_ad(request.data.get('date'))
     data ={
         # 'visited_with':{
             'visited_with':request.data.get('visited_with'),
@@ -83,12 +87,14 @@ def update_data_transmission(request):
     return data
 
 def dcr_data_transmission(request):
-    month_year = datetime.strptime(request.data.get('date'),"%Y-%m-%d")
+    obj = BSDateConverter()
+    ad_date = obj.convert_bs_to_ad(request.data.get('date'))
+    month_year = datetime.strptime(ad_date,"%Y-%m-%d")
     month = month_year.strftime("%B")
     month = nepali_month_from_english(month)
     year = month_year.year
     data = {
-        'date':request.data.get('date'),
+        'date':obj.convert_bs_to_ad(request.data.get('date')),
         'month':month,
         'year':year,
         'company_id':request.data.get('company_id'),

@@ -8,6 +8,7 @@ from Mpo.serializers import ShiftSerializer
 from Company.serializers import CompanySerializers
 from DCRUser.models import CompanyUserRole
 from datetime import datetime
+from bsdate.convertor import BSDateConverter
 
 
 class HigherOrderTourPlanWriteOnlySerializer(serializers.Serializer):
@@ -54,12 +55,14 @@ class HigherOrderTourplanSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        obj = BSDateConverter()
         if HigherOrderTourplan.objects.filter(
-            date=validated_data.get('date'),
+            date=obj.convert_bs_to_ad(validated_data.get('date')),
             user_id=validated_data.get('user_id'),
             company_id=validated_data.get('company_id')).count()>=1 and not validated_data.get('is_unplanned'):
             raise serializers.ValidationError("Tour plan can't be multiple for same date.")
         data = validated_data.copy()
+        # data['date'] = obj.convert_bs_to_ad(validated_data['date'])
         visit_data = data.pop('visit_data')
         if validated_data.get('is_unplanned'):
             HigherOrderTourplan.objects.filter(date=validated_data.get('date')).delete()

@@ -18,11 +18,13 @@ from Mpo.utils import (
     get_user_name,
     get_upper_level_user_id
 )
+from bsdate.convertor import BSDateConverter
 
 def get_expenses_according_to_area_and_user():
     pass
 
 def application_data(request):
+    obj = BSDateConverter()
     is_approved = False
     if request.data.get('is_approved'):
         is_approved = request.data.get('is_approved')
@@ -31,8 +33,8 @@ def application_data(request):
         'application_id':{
             'leave_type':request.data.get('leave_type'),
             'leave_cause':request.data.get('leave_cause'),
-            'leave_from':request.data.get('leave_from'),
-            'leave_to':request.data.get('leave_to'),
+            'leave_from':obj.convert_bs_to_ad(request.data.get('leave_from')),
+            'leave_to':obj.convert_bs_to_ad(request.data.get('leave_to')),
             'company_name':request.data.get('company_name'),
             'leave_status':request.data.get('leave_status'),
             'is_submitted':request.data.get('is_submitted'),
