@@ -33,12 +33,18 @@ class CompanyAreaWiseExpensesSerializers(serializers.ModelSerializer):
 
 
 class LeaveApplicationSerializers(serializers.ModelSerializer):
+    obj = BSDateConverter()
     class Meta:
         model = LeaveApplication
         fields = '__all__'
 
     def to_internal_value(self, data):
         return super().to_internal_value(data)
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance) 
+        response['leave_from'] = self.obj.convert_ad_to_bs(response['leave_from'])
+        return response
     
     # def validate_leave_to(self, attrs):
     #     if attrs < date(nepali_today.year, nepali_today.month, nepali_today.day):
@@ -99,8 +105,8 @@ class MpoWiseLeaveApplicationSerializers(serializers.ModelSerializer):
         leave_to_bs = attrs['leave_to']
         
         # Convert BS dates to AD dates
-        leave_from_ad = datetime.strptime(converter.convert_bs_to_ad(leave_from_bs), '%Y-%m-%d').date()
-        leave_to_ad = datetime.strptime(converter.convert_bs_to_ad(leave_to_bs), '%Y-%m-%d').date()
+        # leave_from_ad = datetime.strptime(converter.convert_bs_to_ad(leave_from_bs), '%Y-%m-%d').date()
+        # leave_to_ad = datetime.strptime(converter.convert_bs_to_ad(leave_to_bs), '%Y-%m-%d').date()
         
         # Get today's date in AD (Gregorian)
         nepali_today_ad = date.today()
@@ -113,7 +119,7 @@ class MpoWiseLeaveApplicationSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError('Leave to date is mandatory.')
 
         # Check if the leave dates are before today
-        if leave_from_ad < nepali_today_ad or leave_to_ad < nepali_today_ad:
+        if leave_from_bs < nepali_today_ad or leave_to_bs < nepali_today_ad:
             raise serializers.ValidationError('Invalid leave date: leave dates cannot be before today.')
 
         return attrs

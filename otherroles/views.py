@@ -19,6 +19,7 @@ from Mpo.utils import (general_notification_send,
 from datetime import date
 from rest_framework.decorators import action, permission_classes, api_view
 from nepali_date_converter import nepali_today
+from bsdate.convertor import BSDateConverter
 
 
 class HigherOrderTourplanViewset(viewsets.ModelViewSet):
@@ -51,7 +52,6 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
         serializer = self.serializer_class(data=data, many=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-
             # general_notification_send(
             #     {
             #         'type':"Higher Order Tourplan",
@@ -78,7 +78,7 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
             tour_plan_visit = [
                 HigherOrderTourPlanVisit(
                     visited_with=data.get('visited_with'),
-                    area=data.get('area'),
+                    # area=data.get('area'),
                     higher_order_tour_plan_id=serializer.data[0].id)
                     for data in request.data.get('visit_data')
                     ]
