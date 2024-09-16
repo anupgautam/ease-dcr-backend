@@ -235,7 +235,6 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         # Convert BS date to AD
         date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
-        print('date_str:', date_str)
 
         # Check for duplicate tour plan on the same date
         if not tour_plan_data['is_unplanned'] and CompanyMpoTourPlan.objects.filter(
