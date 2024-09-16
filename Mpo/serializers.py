@@ -229,6 +229,8 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
+        
+        print(f"Value of select_the_date_id: {tour_plan_data['select_the_date_id']}")
 
         # Convert BS date to AD
         date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
@@ -254,7 +256,6 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
             is_stockist_dcr_added=tour_plan_data['is_stockist_dcr_added'],
             hulting_station=tour_plan_data['hulting_station']
         )
-        print(f"Value of select_the_date_id: {tour_plan_data['select_the_date_id']}")
 
         # Save the tour plan instance
         tour_plan_instance.save()
