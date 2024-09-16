@@ -229,14 +229,20 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
+
+        # Convert BS date to AD
         date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
-        print('date_str',date_str)
+        print('date_str:', date_str)
+
+        # Check for duplicate tour plan on the same date
         if not tour_plan_data['is_unplanned'] and CompanyMpoTourPlan.objects.filter(
             tour_plan__tour_plan__select_the_date_id=date,
             mpo_name=validated_data.get('mpo_name')
         ).exists():
             raise serializers.ValidationError("Tour plan can't be multiple for the same date")
+
+        # Create tour plan instance
         tour_plan_instance = TourPlan(
             select_the_date_id=date,
             select_the_month=tour_plan_data['select_the_month'],
@@ -248,6 +254,8 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
             is_stockist_dcr_added=tour_plan_data['is_stockist_dcr_added'],
             hulting_station=tour_plan_data['hulting_station']
         )
+
+        # Save the tour plan instance
         tour_plan_instance.save()
 
         tour_plan_area_mpo = [
