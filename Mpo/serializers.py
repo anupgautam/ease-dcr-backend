@@ -229,6 +229,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
+        print('heleleoeoeoeoeoeo')
 
         print(f"Value of select_the_date_id: {tour_plan_data['select_the_date_id']}")
 
