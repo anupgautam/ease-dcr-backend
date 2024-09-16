@@ -70,20 +70,13 @@ class BSDateConverter:
         if isinstance(bs_date, datetime):
             date = bs_date.strftime('%Y-%m-%d')
         elif isinstance(bs_date, str):
-            try:
-                datetime.strptime(bs_date, '%Y-%m-%d')
-            except ValueError:
-                raise ValueError("bs_date string must be in 'YYYY-MM-DD' format")
             date = bs_date
         else:
-            raise ValueError("bs_date must be either a string in 'YYYY-MM-DD' format or a datetime object")
-    
+            raise ValueError("bs_date must be either a string or a date object")
+        # date = bs_date.strftime('%Y-%m-%d')
         bs_year, bs_month, bs_day = map(int, date.split('-'))
 
-        if bs_year not in self.bs_month_days:
-            raise ValueError(f"BS year {bs_year} is out of range or unsupported")
-
-        days_accumulated = sum(self.bs_month_days[bs_year][0:bs_month - 1]) + bs_day - 1
+        days_accumulated = sum(self.bs_month_days.get(bs_year, [])[0:bs_month - 1]) + bs_day - 1
 
         days_since_start = 0
         for year in range(self.bs_start_year, bs_year):

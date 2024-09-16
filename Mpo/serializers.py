@@ -6,7 +6,6 @@ from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
 from datetime import datetime
 from django.utils import timezone
-import datetime
 
 
 from DCRUser.serializers import UserSerializers
@@ -20,7 +19,6 @@ from DCRUser.serializers import CompanyUserRoleSerializers
 from Chemist.serializers import CompanyWiseChemistSerializer
 from Stockist.serializers import CompanyStockistSerializers
 from Company.serializers import CompanyAreaSerializers
-from bsdate.convertor import BSDateConverter
 
 
 # class CompanyMpoSerializer(serializers.ModelSerializer):
@@ -147,15 +145,11 @@ class CompanyMPOAreaSerializers(serializers.ModelSerializer):
             'mpo_name__executive_level',
             'mpo_name__company_area',
             'company_area')
-        try:
-            print(instance)
-            instance = queryset.get(pk=instance.pk)
-            response = super().to_representation(instance)  
-            response['mpo_name'] = CompanyUserRoleSerializers(
+        instance = queryset.get(pk=instance.pk)
+        response = super().to_representation(instance)  
+        response['mpo_name'] = CompanyUserRoleSerializers(
                                     instance.mpo_name).data     
-            return response
-        except Exception as e:
-            pass
+        return response
 
 
 # class CompanyMPODoctorSerializer(serializers.ModelSerializer):
@@ -205,13 +199,13 @@ class CompanyMPOAreaTourPlanSerializer(serializers.ModelSerializer):
 
 
 
-class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter):
+class CompanyMpoTourPlanSerializer(serializers.ModelSerializer):
     tour_plan = ShiftWiseTourplanSerializer()
     mpo_area = CompanyMPOAreaTourPlanSerializer(many=True, write_only=True,required=False)
     mpo_area_read = CompanyMPOAreaTourPlanSerializer(many=True, read_only=True,required=False)
 
     class Meta:
-        model = CompanyMpoTourPlan  
+        model = CompanyMpoTourPlan
         fields = [
             'id',
             'mpo_area',
@@ -225,35 +219,16 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
             ]
 
     def create(self, validated_data):
-        obj = BSDateConverter()
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
-        date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
-        print('date_str',date_str)
-
-
-        if 'select_the_date_id' not in tour_plan_data or not isinstance(tour_plan_data['select_the_date_id'], str):
-            raise serializers.ValidationError("Invalid or missing date format for 'select_the_date_id'. Expected 'YYYY-MM-DD'.")
-    
-        try:
-            datetime.strptime(tour_plan_data['select_the_date_id'], '%Y-%m-%d')
-        except ValueError:
-            raise serializers.ValidationError("Date format should be 'YYYY-MM-DD'.")
-
-        # date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
-        date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
-
-        if not tour_plan_data['is_unplanned'] and CompanyMpoTourPlan.objects.filter(
-            tour_plan__tour_plan__select_the_date_id=date,
-            mpo_name=validated_data.get('mpo_name')
-        ).exists():
-            raise serializers.ValidationError("Tour plan can't be multiple for the same date")
-
-        # Create tour plan instance
+        if CompanyMpoTourPlan.objects.filter(
+            tour_plan__tour_plan__select_the_date_id=tour_plan_data['select_the_date_id'],
+            mpo_name=validated_data.get('mpo_name')).exists():
+            raise serializers.ValidationError("Tour plan cant be multiple for same date")
         tour_plan_instance = TourPlan(
-            select_the_date_id=date,
             select_the_month=tour_plan_data['select_the_month'],
+            select_the_date_id=tour_plan_data['select_the_date_id'],
             purpose_of_visit=tour_plan_data['purpose_of_visit'],
             is_unplanned=tour_plan_data['is_unplanned'],
             is_admin_opened=tour_plan_data['is_admin_opened'],
@@ -262,52 +237,42 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
             is_stockist_dcr_added=tour_plan_data['is_stockist_dcr_added'],
             hulting_station=tour_plan_data['hulting_station']
         )
-
-        # Save the tour plan instance
         tour_plan_instance.save()
-
         tour_plan_area_mpo = [
             CompanyMPOAreaTourPlan(
                 tour_plan_id=tour_plan_instance,
-                company_mpo_area_id=area['company_mpo_area_id']
-            ) for area in validated_data['mpo_area']
-        ]
+                company_mpo_area_id=area['company_mpo_area_id']) for area in validated_data['mpo_area']]
         CompanyMPOAreaTourPlan.objects.bulk_create(tour_plan_area_mpo)
-
         shift_instance = Shift.objects.get(id=shift_data['shift'])
         shift_wise_tour_plan_instance = ShiftWiseTourplan(
             tour_plan=tour_plan_instance,
             shift=shift_instance
         )
         shift_wise_tour_plan_instance.save()
-
-        company_mpo_tour_plan = CompanyMpoTourPlan(
+        
+        company_mpo_tour_plan=CompanyMpoTourPlan(
             mpo_name=validated_data.get('mpo_name'),
             tour_plan=shift_wise_tour_plan_instance,
             approved_by=validated_data.get('approved_by'),
-            company_name=validated_data.get('company_name')
+            # submit_to = validated_data.get('submit_to'),
+            company_name = validated_data.get('company_name')
         )
-
         if company_mpo_tour_plan.tour_plan.tour_plan.is_unplanned:
             CompanyMpoTourPlan.objects.filter(
-                tour_plan__tour_plan__select_the_date_id=company_mpo_tour_plan.tour_plan.tour_plan.select_the_date_id,
-                mpo_name=validated_data.get('mpo_name')
+                tour_plan__tour_plan__select_the_date_id=company_mpo_tour_plan.tour_plan.tour_plan.select_the_date_id
             ).delete()
-
         company_mpo_tour_plan.save()
-
         return company_mpo_tour_plan
     
     def update(self, instance, validated_data):
-        obj = BSDateConverter()
         shift_tour_plan = validated_data.get('tour_plan')
         tourplan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
         shift_wise_tour_plan_instance = instance.tour_plan
         tourplan_instance = shift_wise_tour_plan_instance.tour_plan
         if tourplan_data.get('select_the_date_id'):
-            tourplan_instance.select_the_date_id = obj.convert_bs_to_ad(tourplan_data[
-                'select_the_date_id'])
+            tourplan_instance.select_the_date_id = tourplan_data[
+                'select_the_date_id']
         if tourplan_data.get('select_the_month'):
             tourplan_instance.select_the_month = tourplan_data[
                 'select_the_month'
@@ -368,8 +333,6 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         if self.context['request'].method in ['POST', 'PATCH', 'PUT']:
             return super().to_representation(instance)
         response = super().to_representation(instance)
-        # response['select_the_date_id'] = self.convert_ad_to_bs(
-        #     str(instance.tour_plan.tour_plan.select_the_date_id))
         response['company_name'] = CompanySerializers(
                                     instance.company_name).data   
         response['approved_by'] = CompanyUserRoleSerializers(
