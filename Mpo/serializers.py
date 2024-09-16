@@ -254,6 +254,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
             is_stockist_dcr_added=tour_plan_data['is_stockist_dcr_added'],
             hulting_station=tour_plan_data['hulting_station']
         )
+        print(f"Value of select_the_date_id: {tour_plan_data['select_the_date_id']}")
 
         # Save the tour plan instance
         tour_plan_instance.save()
