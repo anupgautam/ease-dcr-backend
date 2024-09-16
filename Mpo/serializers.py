@@ -229,9 +229,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         shift_tour_plan = validated_data.get('tour_plan')
         tour_plan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
-        print('heleleoeoeoeoeoeo')
 
-        print(f"Value of select_the_date_id: {tour_plan_data['select_the_date_id']}")
 
         if 'select_the_date_id' not in tour_plan_data or not isinstance(tour_plan_data['select_the_date_id'], str):
             raise serializers.ValidationError("Invalid or missing date format for 'select_the_date_id'. Expected 'YYYY-MM-DD'.")
@@ -243,6 +241,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
 
         date_str = obj.convert_bs_to_ad(tour_plan_data['select_the_date_id'])
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        print('date_str',date_str)
 
         if not tour_plan_data['is_unplanned'] and CompanyMpoTourPlan.objects.filter(
             tour_plan__tour_plan__select_the_date_id=date,
