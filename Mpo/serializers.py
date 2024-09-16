@@ -299,6 +299,7 @@ class CompanyMpoTourPlanSerializer(serializers.ModelSerializer, BSDateConverter)
         return company_mpo_tour_plan
     
     def update(self, instance, validated_data):
+        obj = BSDateConverter()
         shift_tour_plan = validated_data.get('tour_plan')
         tourplan_data = shift_tour_plan['tour_plan']
         shift_data = shift_tour_plan['shift']
