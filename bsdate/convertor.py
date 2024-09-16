@@ -73,7 +73,7 @@ class BSDateConverter:
             date = bs_date
         else:
             raise ValueError("bs_date must be either a string or a date object")
-        # date = bs_date.strftime('%Y-%m-%d')
+        date = bs_date.strftime('%Y-%m-%d')
         bs_year, bs_month, bs_day = map(int, date.split('-'))
 
         days_accumulated = sum(self.bs_month_days.get(bs_year, [])[0:bs_month - 1]) + bs_day - 1
