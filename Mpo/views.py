@@ -49,9 +49,14 @@ from Mpo.utils import (
 from .backends import CaseInsensitiveDjangoFilterBackend
 from .utils import (
     datetime_string,
+    general_notification_send,
     get_next_month,
     get_next_month_date,
+    get_upper_level_user_id,
+    get_user_id,
+    get_user_name,
     get_year_month_from_date,
+    mpo_data_transmission,
 )
 
 
@@ -331,24 +336,24 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         return len(tour_plan_list) == company_lock_day
 
     def create(self, request, *args, **kwargs):
-        # data = mpo_data_transmission(request)
+        data = mpo_data_transmission(request)
         serializer = CompanyMpoTourPlanSerializer(
             data=request.data, many=True, context={"request": request}
         )
         if serializer.is_valid():
             serializer.save()
-            # if get_upper_level_user_id(data[0]['mpo_name']) and get_user_id(data[0]['mpo_name']):
-            #     general_notification_send(
-            #         {
-            #             'type':"Tourplan",
-            #             "receiver_id":get_upper_level_user_id(data[0]['mpo_name']),
-            #             "sender_name":get_user_name(data[0]['mpo_name']),
-            #             "url":"",
-            #             "sender_id":get_user_id(data[0]['mpo_name']),
-            #             "notification_title":"Tourplan Created",
-            #             "notification_description":f"{get_user_name(data[0]['mpo_name'])} has succesfully created Tourplan"
-            #         }
-            #     )
+            if get_upper_level_user_id(data[0]['mpo_name']) and get_user_id(data[0]['mpo_name']):
+                general_notification_send(
+                    {
+                        'type':"Tourplan",
+                        "receiver_id":get_upper_level_user_id(data[0]['mpo_name']),
+                        "sender_name":get_user_name(data[0]['mpo_name']),
+                        "url":"",
+                        "sender_id":get_user_id(data[0]['mpo_name']),
+                        "notification_title":"Tourplan Created",
+                        "notification_description":f"{get_user_name(data[0]['mpo_name'])} has succesfully created Tourplan"
+                    }
+                )
             return Response(
                 data=serializer.data, status=status.HTTP_200_OK
             )
@@ -364,18 +369,18 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-            # if get_upper_level_user_id(update_instance.mpo_name.id) and get_user_id(update_instance.mpo_name.id):
-            #     general_notification_send(
-            #     {
-            #         'type':"Tourplan",
-            #         "receiver_id":get_upper_level_user_id(update_instance.mpo_name.id),
-            #         "sender_name":get_user_name(update_instance.mpo_name.id),
-            #         "url":"",
-            #         "sender_id":get_user_id(update_instance.mpo_name.id),
-            #         "notification_title":"Tourplan Updated",
-            #         "notification_description":f"{get_user_name(update_instance.mpo_name.id)} has updated Tourplan"
-            #     }
-            # )
+            if get_upper_level_user_id(update_instance.mpo_name.id) and get_user_id(update_instance.mpo_name.id):
+                general_notification_send(
+                {
+                    'type':"Tourplan",
+                    "receiver_id":get_upper_level_user_id(update_instance.mpo_name.id),
+                    "sender_name":get_user_name(update_instance.mpo_name.id),
+                    "url":"",
+                    "sender_id":get_user_id(update_instance.mpo_name.id),
+                    "notification_title":"Tourplan Updated",
+                    "notification_description":f"{get_user_name(update_instance.mpo_name.id)} has updated Tourplan"
+                }
+            )
             return Response(serializer.data)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)

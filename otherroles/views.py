@@ -1,5 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import status
+
+from Mpo.utils import general_notification_send, get_upper_level_user_id, get_user_id, get_user_name
 from .models import HigherOrderTourPlanVisit, HigherOrderTourplan, HigherOrderDCR
 from .serializers import HigherOrderTourplanSerializer, HigherOrderDcrSerializer
 from rest_framework.response import Response
@@ -52,17 +54,17 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-            # general_notification_send(
-            #     {
-            #         'type':"Higher Order Tourplan",
-            #         "receiver_id":get_upper_level_user_id(data[0]['user_id']),
-            #         "sender_name":get_user_name(data[0]['user_id']),
-            #         "url":"",
-            #         "sender_id":get_user_id(data[0]['user_id']),
-            #         "notification_title":"Tourplan Created",
-            #         "notification_description":f"{get_user_name(data[0]['user_id'])} has succesfully created Tourplan"
-            #     }
-            # )
+            general_notification_send(
+                {
+                    'type':"Higher Order Tourplan",
+                    "receiver_id":get_upper_level_user_id(data[0]['user_id']),
+                    "sender_name":get_user_name(data[0]['user_id']),
+                    "url":"",
+                    "sender_id":get_user_id(data[0]['user_id']),
+                    "notification_title":"Tourplan Created",
+                    "notification_description":f"{get_user_name(data[0]['user_id'])} has succesfully created Tourplan"
+                }
+            )
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
@@ -84,17 +86,17 @@ class HigherOrderTourplanViewset(viewsets.ModelViewSet):
                     for data in request.data.get('visit_data')
                     ]
             HigherOrderTourPlanVisit.objects.bulk_create(tour_plan_visit)
-            # general_notification_send(
-            #     {
-            #         'type':"Higher Order Tourplan",
-            #         "receiver_id":get_upper_level_user_id(data['user_id']),
-            #         "sender_name":get_user_name(data['user_id']),
-            #         "url":"",
-            #         "sender_id":get_user_id(data['user_id']),
-            #         "notification_title":"Tourplan Updated",
-            #         "notification_description":f"{get_user_name(data['user_id'])} has updated Tourplan"
-            #     }
-            # )
+            general_notification_send(
+                {
+                    'type':"Higher Order Tourplan",
+                    "receiver_id":get_upper_level_user_id(data['user_id']),
+                    "sender_name":get_user_name(data['user_id']),
+                    "url":"",
+                    "sender_id":get_user_id(data['user_id']),
+                    "notification_title":"Tourplan Updated",
+                    "notification_description":f"{get_user_name(data['user_id'])} has updated Tourplan"
+                }
+            )
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
