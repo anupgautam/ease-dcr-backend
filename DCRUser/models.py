@@ -75,7 +75,7 @@ class CompanyUserArea(models.Model):
 
 class CompanyUserDivision(models.Model):
     company_user_role_id = models.ForeignKey(CompanyUserRole, on_delete=models.CASCADE, blank=True, null=True)
-    company_division_id = models.ForeignKey(CompanyWiseDivision, on_delete=models.CASCADe, blank=True, null=True)
+    company_division_id = models.ForeignKey(CompanyWiseDivision, on_delete=models.CASCADE, blank=True, null=True)
 
 
 
