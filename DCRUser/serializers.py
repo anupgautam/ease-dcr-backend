@@ -168,20 +168,14 @@ class CompanyUserRoleSerializers(serializers.ModelSerializer):
             # Access the necessary fields from the OrderedDict if needed
             company_name = instance.get("company_name")
             role_name = instance.get("role_name")
-            company_area = instance.get("company_area")
             executive_level = instance.get("executive_level")
-            division_name = instance.get("division_name")
         else:
             company_name = instance.company_name
             role_name = instance.role_name
-            company_area = instance.company_area
             executive_level = instance.executive_level
-            division_name = instance.division_name
         response["company_name"] = CompanySerializers(company_name).data
         response["role_name"] = CompanyRolesSerializers(role_name).data
-        response["company_area"] = CompanyAreaSerializers(company_area).data
         response["executive_level"] = CompanyUserSerializers(executive_level).data
-        response["division_name"] = CompanyWiseDivisionSerializers(division_name).data
         tour_plan_list = CompanyMpoTourPlan.objects.filter(
             mpo_name=instance,
             tour_plan__tour_plan__select_the_month=month_number_to_name[
