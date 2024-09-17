@@ -57,23 +57,25 @@ class CompanyUserRole(models.Model):
                                   on_delete=models.CASCADE,
                                   blank=True,
                                   null=True)
-    division_name = models.ForeignKey(CompanyWiseDivision,
-                                      on_delete=models.CASCADE,
-                                      blank=True,
-                                      null=True)
     executive_level = models.ForeignKey(CompanyUser,
                                         on_delete=models.CASCADE,
                                         blank=True,
                                         null=True)
-    company_area = models.ForeignKey(CompanyArea, 
-                                     on_delete=models.CASCADE,
-                                     blank=True,
-                                     null=True)
     station_type = models.CharField(max_length=200,
                                     blank=True,
                                     null=True)
     is_tp_locked = models.BooleanField(null=False, blank=False, default=False)
     objects = CompanyManger()
+
+
+class CompanyUserArea(models.Model):
+    company_user_role_id = models.ForeignKey(CompanyUserRole, on_delete=models.CASCADE, blank=True, null=True)
+    company_area_id = models.ForeignKey(CompanyArea, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class CompanyUserDivision(models.Model):
+    company_user_role_id = models.ForeignKey(CompanyUserRole, on_delete=models.CASCADE, blank=True, null=True)
+    company_division_id = models.ForeignKey(CompanyWiseDivision, on_delete=models.CASCADe, blank=True, null=True)
 
 
 
