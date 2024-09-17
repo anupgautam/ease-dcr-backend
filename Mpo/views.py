@@ -67,9 +67,7 @@ class CompanyDivisionwiseMpoViewset(viewsets.ModelViewSet):
         "mpo_name__company_name",
         "mpo_name__user_name",
         "mpo_name__role_name",
-        "mpo_name__division_name",
         "mpo_name__executive_level",
-        "mpo_name__company_area",
         "division_name",
         "company_name",
     )
@@ -182,9 +180,7 @@ class CompanyMpoTourplanWithOutPagination(viewsets.ModelViewSet):
         "mpo_name__company_name",
         "mpo_name__user_name",
         "mpo_name__role_name",
-        "mpo_name__division_name",
         "mpo_name__executive_level",
-        "mpo_name__company_area",
         "mpo_name__role_name__role_name",
         "mpo_name",
         "company_name",
@@ -195,9 +191,7 @@ class CompanyMpoTourplanWithOutPagination(viewsets.ModelViewSet):
         "approved_by__company_name",
         "approved_by__user_name",
         "approved_by__role_name",
-        "approved_by__division_name",
         "approved_by__executive_level",
-        "approved_by__company_area",
         "approved_by__role_name__role_name",
     )
     serializer_class = CompanyMpoTourPlanSerializer
@@ -223,9 +217,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         "mpo_name__company_name",
         "mpo_name__user_name",
         "mpo_name__role_name",
-        "mpo_name__division_name",
         "mpo_name__executive_level",
-        "mpo_name__company_area",
         "mpo_name__role_name__role_name",
         "mpo_name",
         "company_name",
@@ -236,9 +228,7 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         "approved_by__company_name",
         "approved_by__user_name",
         "approved_by__role_name",
-        "approved_by__division_name",
         "approved_by__executive_level",
-        "approved_by__company_area",
         "approved_by__role_name__role_name",
     )
     serializer_class = CompanyMpoTourPlanSerializer

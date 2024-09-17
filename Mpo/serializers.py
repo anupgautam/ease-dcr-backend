@@ -141,10 +141,8 @@ class CompanyMPOAreaSerializers(serializers.ModelSerializer):
             'mpo_name__company_name',
             'mpo_name__role_name__role_name',
             'mpo_name__role_name__company_name',
-            'mpo_name__division_name',
             'mpo_name__executive_level',
-            'mpo_name__company_area',
-            'company_area')
+            )
         instance = queryset.get(pk=instance.pk)
         response = super().to_representation(instance)  
         response['mpo_name'] = CompanyUserRoleSerializers(
