@@ -342,18 +342,18 @@ class CompanyMpoTourplanViewset(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-            if get_upper_level_user_id(data[0]['mpo_name']) and get_user_id(data[0]['mpo_name']):
-                general_notification_send(
-                    {
-                        'type':"Tourplan",
-                        "receiver_id":get_upper_level_user_id(data[0]['mpo_name']),
-                        "sender_name":get_user_name(data[0]['mpo_name']),
-                        "url":"",
-                        "sender_id":get_user_id(data[0]['mpo_name']),
-                        "notification_title":"Tourplan Created",
-                        "notification_description":f"{get_user_name(data[0]['mpo_name'])} has succesfully created Tourplan"
-                    }
-                )
+            # if get_upper_level_user_id(data[0]['mpo_name']) and get_user_id(data[0]['mpo_name']):
+            #     general_notification_send(
+            #         {
+            #             'type':"Tourplan",
+            #             "receiver_id":get_upper_level_user_id(data[0]['mpo_name']),
+            #             "sender_name":get_user_name(data[0]['mpo_name']),
+            #             "url":"",
+            #             "sender_id":get_user_id(data[0]['mpo_name']),
+            #             "notification_title":"Tourplan Created",
+            #             "notification_description":f"{get_user_name(data[0]['mpo_name'])} has succesfully created Tourplan"
+            #         }
+            #     )
             return Response(
                 data=serializer.data, status=status.HTTP_200_OK
             )
