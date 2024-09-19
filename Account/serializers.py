@@ -98,11 +98,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=250)
     role = serializers.SerializerMethodField("get_role")
     company_id = serializers.SerializerMethodField("get_company_id")
-    division_name = serializers.SerializerMethodField("get_division_name")
     company_user_role_id = serializers.SerializerMethodField("get_company_user_role_id")
     company_user_id = serializers.SerializerMethodField("get_company_user_id")
     user_id = serializers.SerializerMethodField("get_user_id")
-    company_area_id = serializers.SerializerMethodField("get_company_area_id")
     is_highest_priority = serializers.SerializerMethodField("get_is_highest_priority")
     is_active = serializers.SerializerMethodField("get_user_status")
 
@@ -126,15 +124,15 @@ class UserLoginSerializer(serializers.ModelSerializer):
         company_user_instance = CompanyUser.objects.get(user_name=user_id)
         return company_user_instance.company_name.company_id
 
-    def get_division_name(self, data):
-        user_id = User.objects.get(email=data["email"])
-        if not CompanyUserRole.objects.filter(user_name=user_id).exists():
-            return None
-        instance = CompanyUserRole.objects.get(user_name=user_id)
-        if instance.division_name:
-            return instance.division_name.id
-        else:
-            return None
+    # def get_division_name(self, data):
+    #     user_id = User.objects.get(email=data["email"])
+    #     if not CompanyUserRole.objects.filter(user_name=user_id).exists():
+    #         return None
+    #     instance = CompanyUserRole.objects.get(user_name=user_id)
+    #     if instance.division_name:
+    #         return instance.division_name.id
+    #     else:
+    #         return None
 
     def get_company_user_role_id(self, data):
         user_id = User.objects.get(email=data["email"])
@@ -158,12 +156,12 @@ class UserLoginSerializer(serializers.ModelSerializer):
         user_id = User.objects.get(email=data["email"])
         return user_id.is_active
 
-    def get_company_area_id(self, data):
-        user_id = User.objects.get(email=data["email"])
-        company_user_role = CompanyUserRole.objects.get(user_name=user_id)
-        if not company_user_role.company_area:
-            return None
-        return company_user_role.company_area.id
+    # def get_company_area_id(self, data):
+    #     user_id = User.objects.get(email=data["email"])
+    #     company_user_role = CompanyUserRole.objects.get(user_name=user_id)
+    #     if not company_user_role.company_area:
+    #         return None
+    #     return company_user_role.company_area.id
 
     class Meta:
         model = User
@@ -185,10 +183,8 @@ class UserLoginByIdSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField()
     role = serializers.SerializerMethodField("get_role")
     company_id = serializers.SerializerMethodField("get_company_id")
-    division_name = serializers.SerializerMethodField("get_division_name")
     company_user_role_id = serializers.SerializerMethodField("get_company_user_role_id")
     company_user_id = serializers.SerializerMethodField("get_company_user_id")
-    company_area_id = serializers.SerializerMethodField("get_company_area_id")
     is_highest_priority = serializers.SerializerMethodField("get_is_highest_priority")
 
     def get_is_highest_priority(self, data):
@@ -212,15 +208,15 @@ class UserLoginByIdSerializer(serializers.ModelSerializer):
         company_user_instance = CompanyUser.objects.get(user_name=user)
         return company_user_instance.company_name.company_id
 
-    def get_division_name(self, data):
-        user = User.objects.get(id=data["user_id"])
-        if not CompanyUserRole.objects.filter(user_name=user).exists():
-            return None
-        instance = CompanyUserRole.objects.get(user_name=user)
-        if instance.division_name:
-            return instance.division_name.id
-        else:
-            return None
+    # def get_division_name(self, data):
+    #     user = User.objects.get(id=data["user_id"])
+    #     if not CompanyUserRole.objects.filter(user_name=user).exists():
+    #         return None
+    #     instance = CompanyUserRole.objects.get(user_name=user)
+    #     if instance.division_name:
+    #         return instance.division_name.id
+    #     else:
+    #         return None
 
     def get_company_user_role_id(self, data):
         user = User.objects.get(id=data["user_id"])
@@ -236,12 +232,12 @@ class UserLoginByIdSerializer(serializers.ModelSerializer):
         company_user_instance = CompanyUser.objects.get(user_name=user)
         return company_user_instance.id
 
-    def get_company_area_id(self, data):
-        user = User.objects.get(id=data["user_id"])
-        company_user_role = CompanyUserRole.objects.get(user_name=user)
-        if not company_user_role.company_area:
-            return None
-        return company_user_role.company_area.id
+    # def get_company_area_id(self, data):
+    #     user = User.objects.get(id=data["user_id"])
+    #     company_user_role = CompanyUserRole.objects.get(user_name=user)
+    #     if not company_user_role.company_area:
+    #         return None
+    #     return company_user_role.company_area.id
 
     class Meta:
         model = User

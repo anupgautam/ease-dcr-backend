@@ -65,11 +65,9 @@ class UserLoginView(APIView):
                 password = serializer.data.get("password")
                 role = serializer.data.get("role")
                 company_id = serializer.data.get("company_id")
-                division = serializer.data.get("division_name")
                 company_user_role_id = serializer.data.get("company_user_role_id")
                 company_user_id = serializer.data.get("company_user_id")
                 user_id = serializer.data.get("user_id")
-                company_area_id = serializer.data.get("company_area_id")
                 is_highest_priority = serializer.data.get("is_highest_priority")
                 is_active = serializer.data.get("is_active")
                 if email is None or password is None:
@@ -98,11 +96,9 @@ class UserLoginView(APIView):
                                 "status": "success",
                                 "role": role,
                                 "company_id": company_id,
-                                "company_division_name": division,
                                 "company_user_role_id": company_user_role_id,
                                 "company_user_id": company_user_id,
                                 "user_id": user_id,
-                                "company_area_id": company_area_id,
                                 "is_highest_priority": is_highest_priority,
                                 "is_active": is_active
                             },
@@ -134,10 +130,8 @@ class UserLoginByIdView(APIView):
             user_id = serializer.data.get("user_id")
             role = serializer.data.get("role")
             company_id = serializer.data.get("company_id")
-            division = serializer.data.get("division_name")
             company_user_role_id = serializer.data.get("company_user_role_id")
             company_user_id = serializer.data.get("company_user_id")
-            company_area_id = serializer.data.get("company_area_id")
             is_highest_priority = serializer.data.get("is_highest_priority")
 
             try:
@@ -157,11 +151,9 @@ class UserLoginByIdView(APIView):
                     "status": "success",
                     "role": role,
                     "company_id": company_id,
-                    "company_division_name": division,
                     "company_user_role_id": company_user_role_id,
                     "company_user_id": company_user_id,
                     "user_id": user_id,
-                    "company_area_id": company_area_id,
                     "is_highest_priority": is_highest_priority,
                 },
                 status=status.HTTP_200_OK,
