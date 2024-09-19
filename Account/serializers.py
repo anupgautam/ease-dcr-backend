@@ -170,11 +170,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
             "password",
             "role",
             "company_id",
-            "division_name",
             "company_user_role_id",
             "company_user_id",
             "user_id",
-            "company_area_id",
             "is_highest_priority",
             "is_active"
         ]
@@ -245,10 +243,8 @@ class UserLoginByIdSerializer(serializers.ModelSerializer):
             "user_id",
             "role",
             "company_id",
-            "division_name",
             "company_user_role_id",
             "company_user_id",
-            "company_area_id",
             "is_highest_priority",
         ]
 
