@@ -44,6 +44,8 @@ def get_year_month_from_date(selected_date):
 def mpo_data_transmission(request):
     # company_name = request.data.get('company_name')
     dates = request.data.get('dates')
+    print('yes ma xa nee')
+    print('dates',request.data.get('dates'))
     approved_by = request.data.get('approved_by')
     # year_month = get_year_month_from_date(dates[0])
     # instance = CompanyUserRole.objects.get(id=request.data.get('mpo_name'))
@@ -71,7 +73,6 @@ def mpo_data_transmission(request):
         'is_approved':request.data.get('is_approved'),
         # 'submit_to':instance.executive_level.id
     }
-    print('dates',dates)
     sending_data = []
     for date in create_data['dates']:
         sending_data.append({
