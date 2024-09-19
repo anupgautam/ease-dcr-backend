@@ -42,6 +42,7 @@ def get_year_month_from_date(selected_date):
 
 
 def mpo_data_transmission(request):
+    print('request',request)
     # company_name = request.data.get('company_name')
     dates = request.data.get('dates')
     approved_by = request.data.get('approved_by')
