@@ -72,7 +72,7 @@ def mpo_data_transmission(request):
         # 'submit_to':instance.executive_level.id
     }
     sending_data = []
-    for date in create_data['dates']:
+    for date in create_data['select_the_date']:
         sending_data.append({
         'mpo_name':request.data.get('mpo_name'),
         'company_name':request.data.get('company_name'),
