@@ -43,8 +43,9 @@ def get_year_month_from_date(selected_date):
 
 def mpo_data_transmission(request):
     # company_name = request.data.get('company_name')
-    if isinstance(request, list):
+    if isinstance(request.data, list):
         request.data = request.data[0]
+    print('request.data',request.data)
     dates = request.data.get('dates')
     approved_by = request.data.get('approved_by')
     # year_month = get_year_month_from_date(dates[0])
