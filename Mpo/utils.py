@@ -43,12 +43,12 @@ def get_year_month_from_date(selected_date):
 
 def mpo_data_transmission(request):
     # company_name = request.data.get('company_name')
-    dates = request.data[0].get('dates')
+    # dates = request.data[0].get('dates')
     approved_by = request.data[0].get('approved_by')
     # year_month = get_year_month_from_date(dates[0])
     # instance = CompanyUserRole.objects.get(id=request.data.get('mpo_name'))
     create_data = {
-        'dates':dates,
+        # 'dates':dates,
         'mpo_name':request.data[0].get('mpo_name'),
         'company_name':request.data[0].get('company_name'),
         'tour_plan':{
