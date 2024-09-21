@@ -43,35 +43,32 @@ def get_year_month_from_date(selected_date):
 
 def mpo_data_transmission(request):
     # company_name = request.data.get('company_name')
-    if isinstance(request.data, list):
-        request.data = request.data[0]
-    print('request.data',request.data)
-    dates = request.data.get('dates')
-    approved_by = request.data.get('approved_by')
+    dates = request.data[0].get('dates')
+    approved_by = request.data[0].get('approved_by')
     # year_month = get_year_month_from_date(dates[0])
     # instance = CompanyUserRole.objects.get(id=request.data.get('mpo_name'))
     create_data = {
         'dates':dates,
-        'mpo_name':request.data.get('mpo_name'),
-        'company_name':request.data.get('company_name'),
+        'mpo_name':request.data[0].get('mpo_name'),
+        'company_name':request.data[0].get('company_name'),
         'tour_plan':{
             'shift':
-                {'shift':request.data.get('shift'),
+                {'shift':request.data[0].get('shift'),
                 },
             'tour_plan':
             {
             # 'select_the_month':year_month['month'],
-            'select_the_month':request.data.get('month'),
-            'select_the_date_id':request.data.get('select_the_date'),
-            'select_the_area':request.data.get('select_the_area'),
-            'purpose_of_visit':request.data.get('purpose_of_visit'),
-            'is_dcr_added':request.data.get('is_dcr_added'),
-            'is_unplanned':request.data.get('is_unplanned'),
-            'hulting_station': request.data.get('hulting_station')
+            'select_the_month':request.data[0].get('month'),
+            'select_the_date_id':request.data[0].get('select_the_date'),
+            'select_the_area':request.data[0].get('select_the_area'),
+            'purpose_of_visit':request.data[0].get('purpose_of_visit'),
+            'is_dcr_added':request.data[0].get('is_dcr_added'),
+            'is_unplanned':request.data[0].get('is_unplanned'),
+            'hulting_station': request.data[0].get('hulting_station')
         }
         },
         'approved_by':approved_by,
-        'is_approved':request.data.get('is_approved'),
+        'is_approved':request.data[0].get('is_approved'),
         # 'submit_to':instance.executive_level.id
     }
     sending_data = []
