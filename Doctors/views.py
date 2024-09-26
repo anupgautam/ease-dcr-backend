@@ -29,7 +29,7 @@ class DoctorViewset(viewsets.ModelViewSet):
     serializer_class = DoctorSerializers
     queryset = Doctor.objects.all()
     pagination_class = CustomPagination
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = super().get_queryset()
